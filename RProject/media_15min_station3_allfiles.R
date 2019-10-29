@@ -19,11 +19,15 @@ for(i in 1:length(names)){
   g <- dplyr::group_by(x, dia_mes_ano, h = substr(hora_minuto, 1, 2), 
                        m = floor(as.numeric(substr(hora_minuto, 3, 4))/15))
   
+  teste <- 0
+  
   gg <- dplyr::summarise(g, hora_minuto = dplyr::first(hora_minuto), 
                          irradiacao = mean(irr), 
                          temperatura = mean(temp),
                          #umidade = mean(hum),
-                         preciptacao = mean(rainfall),
+                         
+                         temporario = sum(rainfall),
+                         
                          pm1_massa = mean(massaPM1), 
                          pm2_massa = mean(massaPM2), 
                          pm4_massa = mean(massaPM4), 
@@ -35,6 +39,7 @@ for(i in 1:length(names)){
                          concentracao_media = mean(tamanho_medio), 
                          vento_dir=mean(vento_dir),
                          vento_vel=mean(vento_vel), n = dplyr::n())
+ 
   y <- gg
   y$h <- NULL
   y$m <- NULL
