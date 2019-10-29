@@ -18,7 +18,7 @@ pathSta <- setwd("D:/github/Tabelas_DynamoDB/ambientais_diario_15min/")
 pathSta <- setwd("D:/github/Tabelas_DynamoDB/ambientais_diario_15min/")
 namesSta <- list.files(pattern = "*.csv")
 filesSta <- paste(pathSta, "/", namesSta, sep = "")
-View(filesSta)
+#View(filesSta)
 
 if (length(filesInv) > length(filesSta) || length(filesInv) == length(filesSta)){
   qtdFiles <- length(namesInv)
@@ -43,8 +43,8 @@ for(i in 1:qtdFiles){
   
   dia <- jointdataset$dia_mes_ano[i]
   
-  n.y <- NULL
-  n.x <- NULL
+  jointdataset$n.y <- NULL
+  jointdataset$n.x <- NULL
   
   # Inv_Est_Merge_dia.csv
   
