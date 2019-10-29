@@ -4,18 +4,19 @@ library(readr)
 library("stringr")
 library(plyr)  
 
-files <- setwd("~/Projeto/Tabelas_DynamoDB/ambientais_diarios_min/")
+files <- setwd("D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_min")
 files = list.files(pattern="*.csv")
 
 csv_mensal <- do.call("rbind", lapply(files, 
                                       function(x) read.csv(x,stringsAsFactors = FALSE, 
                                                            header = TRUE, na.strings = "n/a")))
 
-write_csv(csv_mensal,'~/Projeto/Tabelas_DynamoDB/ambientais_diarios_15min/temp.csv')
+write_csv(csv_mensal,'D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_15min\\temp.csv')
 
-ArqTem_path <- "~/Projeto/Tabelas_DynamoDB/ambientais_diarios_15min/temp.csv"
+ArqTem_path <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_15min\\temp.csv"
 
 x <- readr::read_csv(ArqTem_path, col_types = cols(hora_minuto = col_character()))
+
 #x$hora_minuto <- sprintf("%06s",x$hora_minuto)
 x$hora_minuto <- str_pad(x$hora_minuto, width=6, side="left", pad="0")
 #View(x$hora_minuto)
@@ -41,5 +42,6 @@ y <- gg
 y$h <- NULL
 y$m <- NULL
 
-write_csv(y,'~/Projeto/Tabelas_DynamoDB/ambientais_diarios_15min/Ambientais15m_Mensal_Out.csv')
+View(y)
+write_csv(y,'D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_15min\\15m_ambiental-Mensal.csv')
 

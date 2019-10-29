@@ -6,7 +6,7 @@ library("stringr")
 library(plyr)  
 
 
-files <- setwd("C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\inversor_diario_min\\")
+files <- setwd("D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\")
 names <- list.files(pattern = "*.csv")
 
 for(i in 1:length(names)){ 
@@ -42,7 +42,7 @@ for(i in 1:length(names)){
   y$I_DC <- round(y$I_DC, digits = 2)
   y$V_DC <- round(y$V_DC, digits = 2)
   
-  salvarArq_path <- "C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\inversor_diario_15min\\"
+  salvarArq_path <- "D:\\github\\Tabelas_DynamoDB\\inversor_diario_15min\\"
   salvarArq_name <- paste(salvarArq_path, "15min_", names[i], sep = "")
   write_csv(y, salvarArq_name)
   

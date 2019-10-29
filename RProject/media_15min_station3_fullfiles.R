@@ -6,10 +6,8 @@ library("stringr")
 library(plyr)  
 
 
-files <- setwd("C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_min\\")
+files <- setwd("D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_min")
 names <- list.files(pattern = "*.csv")
-
-View(names)
 
 for(i in 1:length(names)){ 
   assign(names[i],read.csv(names[i],skip=1, header=TRUE))
@@ -40,10 +38,7 @@ for(i in 1:length(names)){
   y$m <- NULL
   
   #write_csv(y,'C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_15min\\Ambientais15m_CG_20191004.csv')
-  
-  #write_csv(y,'C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_15min\\Ambientais15m_CG_20191004.csv')
-  
-  
+
   y$irradiacao <-round(y$irradiacao, digits = 2)
   y$pm1_massa <- round(y$pm1_massa, digits = 2)
   y$pm2_massa <- round(y$pm2_massa, digits = 2)
@@ -58,8 +53,7 @@ for(i in 1:length(names)){
   y$vento_dir <- round(y$vento_dir, digits = 2)
   y$vento_vel <- round(y$vento_vel, digits = 2)
   
-  
-  salvarArq_path <- "C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_15min\\"
+  salvarArq_path <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_15min\\"
   salvarArq_name <- paste(salvarArq_path, "15min_", names[i], sep = "")
   write_csv(y, salvarArq_name)
   

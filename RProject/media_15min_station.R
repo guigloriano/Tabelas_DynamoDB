@@ -4,14 +4,17 @@ library(magrittr)
 library(readr)
 library(stringr)
 
-caminho_CSV <- "C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_min\\ambientais_ufms-20191004.csv"
+arqDia <- 20191003
+csvPath <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_min\\ambientais_ufms-"
+csvFile <- paste(csvPath, arqDia, ".csv", sep = "")
+#View(csvFile)
 
 #path_amb_dia <- "~/Projeto/Tabelas_DynamoDB/ambientais_diarios_min/"
 #dirs <- list.files(path_amb_dia, full.names = TRUE, recursive = TRUE)
 #View(dirs)
 
 
-x <- readr::read_csv(caminho_CSV, col_types = cols(hora_minuto = col_character()))
+x <- readr::read_csv(csvFile, col_types = cols(hora_minuto = col_character()))
 
 x$hora_minuto <- str_pad(x$hora_minuto, width=6, side="left", pad="0")
 
@@ -35,11 +38,8 @@ gg <- dplyr::summarise(g, hora_minuto = dplyr::first(hora_minuto),
 y <- gg
 y$h <- NULL
 y$m <- NULL
-  
-#write_csv(y,'C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_15min\\Ambientais15m_CG_20191004.csv')
 
 #write_csv(y,'C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_15min\\Ambientais15m_CG_20191004.csv')
-
 
 y$irradiacao <-round(y$irradiacao, digits = 2)
 y$pm1_massa <- round(y$pm1_massa, digits = 2)
@@ -55,7 +55,10 @@ y$temperatura <- round(y$temperatura, digits = 2)
 y$vento_dir <- round(y$vento_dir, digits = 2)
 y$vento_vel <- round(y$vento_vel, digits = 2)
 
+csvPath_dest <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_15min\\15min_ambientais_ufms-"
+csvFile_dest <- paste(csvPath_dest, arqDia, ".csv", sep = "")
+#View(csvFile_dest)
 
-write_csv(y, "C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_15min\\ambientais_ufms15min-20191004.csv")
+write_csv(y, csvFile_dest)
 
   

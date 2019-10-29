@@ -2,9 +2,12 @@ library(dplyr)
 library(magrittr)
 library(readr)
 
-caminho_CSV <- "~/Projeto/Tabelas_DynamoDB/inversor_diario_min/inversor_1_ufms-20191025.csv"
+arqDia <- 20191003
+csvPath <- "D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\inversor_1_ufms-"
+csvFile <- paste(csvPath, arqDia, ".csv", sep = "")
+#View(csvFile)
 
-x <- readr::read_csv(caminho_CSV, col_types = cols(hora_minuto = col_character()))
+x <- readr::read_csv(csvFile, col_types = cols(hora_minuto = col_character()))
 
 g <- dplyr::group_by(x, dia_mes_ano, h = substr(hora_minuto, 1, 2), 
                      m = floor(as.numeric(substr(hora_minuto, 3, 4))/15))
@@ -21,4 +24,9 @@ y <- gg
 y$h <- NULL
 y$m <- NULL
 
-write_csv(y,'~/Projeto/Tabelas_DynamoDB/inversor_diario_15min/inversor15m_1_ufms-20191025.csv')
+csvPath_dest <- "D:\\github\\Tabelas_DynamoDB\\inversor_diario_15min\\15min_inversor_1_ufms-"
+csvFile_dest <- paste(csvPath_dest, arqDia, ".csv", sep = "")
+#View(csvFile_dest)
+
+write_csv(y, csvFile_dest)
+
