@@ -19,9 +19,9 @@ const formatDate = (date, hourAndMinute) => {
 		min = hourItem[3] + hourItem[4]
 	}
 
-	let completeTimestamp = day + "/" + month + "/" + year + " - " + hour + ":" + min + ":" + sec
-	let completeDate = day + "/" + month + "/" + year
-	hourMin = hour + ":" + min
+	let completeTimestamp = day + month + year + " - " + hour + min + sec
+	let completeDate = day + month + year
+	hourMin = hour + min + sec
 
 	return {
 		completeTimestamp: completeTimestamp,
@@ -33,8 +33,8 @@ const formatDate = (date, hourAndMinute) => {
 		min: parseInt(min),
 		sec: parseInt(sec),
 		hourMin: hourMin,
-		monthDay: day + "/" + month,
-		yearMonth: month + "/" + year
+		monthDay: month + day,
+		yearMonth: year + month
 	}
 
 }

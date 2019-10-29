@@ -227,7 +227,7 @@ readForOneDay(date)
 
 		for (let i = 0; i < response.interval.length; i++) {
 			arrayToWrite.push([
-				response.date,
+				response.monthDay,
 				response.interval[i],
 				response.irradiation[i], 
 				response.PM1Particulates[i],

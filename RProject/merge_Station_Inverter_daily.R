@@ -48,7 +48,7 @@ for(i in 1:qtdFiles){
   
   # Inv_Est_Merge_dia.csv
   
-  pathDest <- "D:/github/Tabelas_DynamoDB/merge/"
+  pathDest <- "D:/github/Tabelas_DynamoDB/merge/daily/"
   fileDest <- paste(pathDest,  "Inv_Est_Merge_", dia, ".csv", sep = "")
   
   write_csv(jointdataset, fileDest)
