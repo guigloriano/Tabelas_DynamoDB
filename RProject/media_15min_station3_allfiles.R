@@ -16,18 +16,20 @@ for(i in 1:length(names)){
   
   x$hora_minuto <- str_pad(x$hora_minuto, width=6, side="left", pad="0")
   
+  
   g <- dplyr::group_by(x, dia_mes_ano, h = substr(hora_minuto, 1, 2), 
                        m = floor(as.numeric(substr(hora_minuto, 3, 4))/15))
   
-  teste <- 0
-  
-  gg <- dplyr::summarise(g, hora_minuto = dplyr::first(hora_minuto), 
+ gg <- dplyr::summarise(g, hora_minuto = dplyr::first(hora_minuto), 
                          irradiacao = mean(irr), 
                          temperatura = mean(temp),
                          #umidade = mean(hum),
                          
-                         temporario = sum(rainfall),
-                         
+                        
+                         preciptacao = max(rainfall),
+                        
+                        
+                        
                          pm1_massa = mean(massaPM1), 
                          pm2_massa = mean(massaPM2), 
                          pm4_massa = mean(massaPM4), 
@@ -38,8 +40,11 @@ for(i in 1:length(names)){
                          pm10_concentracao = mean(numPM10), 
                          concentracao_media = mean(tamanho_medio), 
                          vento_dir=mean(vento_dir),
-                         vento_vel=mean(vento_vel), n = dplyr::n())
- 
+                         vento_vel=mean(vento_vel), 
+                
+                        
+                         n = dplyr::n())
+  
   y <- gg
   y$h <- NULL
   y$m <- NULL
@@ -48,7 +53,9 @@ for(i in 1:length(names)){
 
   y$irradiacao <-round(y$irradiacao, digits = 2)
   y$temperatura <- round(y$temperatura, digits = 2)
-  y$preciptacao <-round(y$preciptacao, digits = 2)
+  #y$preciptacao <-round(y$preciptacao, digits = 2)
+  
+    
   y$pm1_massa <- round(y$pm1_massa, digits = 2)
   y$pm2_massa <- round(y$pm2_massa, digits = 2)
   y$pm4_massa <- round(y$pm4_massa, digits = 2)
