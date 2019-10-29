@@ -5,7 +5,7 @@ library(readr)
 library(stringr)
 
 arqDia <- 20191003
-csvPath <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_min\\ambientais_ufms-"
+csvPath <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diario_min\\ambientais_ufms-"
 csvFile <- paste(csvPath, arqDia, ".csv", sep = "")
 #View(csvFile)
 
@@ -55,7 +55,7 @@ y$temperatura <- round(y$temperatura, digits = 2)
 y$vento_dir <- round(y$vento_dir, digits = 2)
 y$vento_vel <- round(y$vento_vel, digits = 2)
 
-csvPath_dest <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_15min\\15min_ambientais_ufms-"
+csvPath_dest <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diario_15min\\15min_ambientais_ufms-"
 csvFile_dest <- paste(csvPath_dest, arqDia, ".csv", sep = "")
 #View(csvFile_dest)
 

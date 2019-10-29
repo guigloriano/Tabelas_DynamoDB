@@ -6,7 +6,7 @@ library("stringr")
 library(plyr)  
 
 
-files <- setwd("D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_min")
+files <- setwd("D:\\github\\Tabelas_DynamoDB\\ambientais_diario_min")
 names <- list.files(pattern = "*.csv")
 
 for(i in 1:length(names)){ 
@@ -53,7 +53,7 @@ for(i in 1:length(names)){
   y$vento_dir <- round(y$vento_dir, digits = 2)
   y$vento_vel <- round(y$vento_vel, digits = 2)
   
-  salvarArq_path <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diarios_15min\\"
+  salvarArq_path <- "D:\\github\\Tabelas_DynamoDB\\ambientais_diario_15min\\"
   salvarArq_name <- paste(salvarArq_path, "15min_", names[i], sep = "")
   write_csv(y, salvarArq_name)
   

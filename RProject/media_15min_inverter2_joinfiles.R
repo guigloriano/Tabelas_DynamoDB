@@ -20,9 +20,9 @@ files = list.files(pattern="*.csv")
 csv_mensal <- do.call("rbind", lapply(files, 
                              function(x) read.csv(x,stringsAsFactors = FALSE, 
                                                   header = TRUE, na.strings = "n/a")))
-write_csv(csv_mensal,"D:\\github\\Tabelas_DynamoDB\\inversor_diario_15min\\temp.csv")
+write_csv(csv_mensal,"D:\\github\\Tabelas_DynamoDB\\temp\\tempInvMensal.csv")
 
-ArqTem_path <- "D:\\github\\Tabelas_DynamoDB\\inversor_diario_15min\\temp.csv"
+ArqTem_path <- "D:\\github\\Tabelas_DynamoDB\\temp\\tempInvMensal.csv"
 
 x <- readr::read_csv(ArqTem_path, col_types = cols(hora_minuto = col_character()))
 
@@ -44,5 +44,5 @@ y <- gg
 y$h <- NULL
 y$m <- NULL
 
-write_csv(y, "D:\\github\\Tabelas_DynamoDB\\inversor_diario_15min\\15min_inversor-Mensal.csv")
+write_csv(y, "D:\\github\\Tabelas_DynamoDB\\merge\\15min_inversor-Mensal.csv")
 
