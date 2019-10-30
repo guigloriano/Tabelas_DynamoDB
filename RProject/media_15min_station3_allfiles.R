@@ -28,8 +28,6 @@ for(i in 1:length(names)){
                         
                          preciptacao = max(rainfall),
                         
-                        
-                        
                          pm1_massa = mean(massaPM1), 
                          pm2_massa = mean(massaPM2), 
                          pm4_massa = mean(massaPM4), 
