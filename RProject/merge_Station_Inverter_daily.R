@@ -4,21 +4,15 @@ library(readr)
 library("stringr")
 library(plyr)  
 
-#arqDia <- 20191003
-#csvPath <- "D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\inversor_1_ufms-"
-#csvFile <- paste(csvPath, arqDia, ".csv", sep = "")
-
 pathInv <- setwd("D:/github/Tabelas_DynamoDB/inversor_diario_15min/")
 pathInv <- setwd("D:/github/Tabelas_DynamoDB/inversor_diario_15min/")
 namesInv <- list.files(pattern = "*.csv")
 filesInv <- paste(pathInv,  "/", namesInv, sep = "")
-#View(filesInv)
 
 pathSta <- setwd("D:/github/Tabelas_DynamoDB/ambientais_diario_15min/")
 pathSta <- setwd("D:/github/Tabelas_DynamoDB/ambientais_diario_15min/")
 namesSta <- list.files(pattern = "*.csv")
 filesSta <- paste(pathSta, "/", namesSta, sep = "")
-#View(filesSta)
 
 if (length(filesInv) > length(filesSta) || length(filesInv) == length(filesSta)){
   qtdFiles <- length(namesInv)
