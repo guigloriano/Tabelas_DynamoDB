@@ -5,27 +5,35 @@ library(tidyverse)
 library(ggplot2)
 
 
-fileDia <- 20191003
-csvPath <- "D:/github/Tabelas_DynamoDB/merge/daily/Inv_Est_Merge_"
-csvFile <- paste(csvPath, fileDia, ".csv", sep = "")
-#View(csvFile)
+csvPath <- setwd("D:\\github\\Tabelas_DynamoDB\\merge\\daily\\")
+names <- list.files(pattern = "*.csv")
 
-dataset <- readr::read_csv(csvFile, col_types = cols(hora_minuto = col_character()))
-
-
-surveys_complete = as.data.frame(dataset)
-#View(dataset)
-
-
-ggplot(data = surveys_complete, 
-       mapping = aes(x = hora_minuto, y = pm1_massa, group = 1)) + 
-                         geom_line(color="grey", size=1) + 
-                         geom_point(shape=21, color="black", fill="#69b3a2", size=2) +
-                         theme(axis.text.x = element_text(angle = 90)) +
-                         labs(x = "Hora", y = "Massa PM1.0") +
-                         ggtitle("Distribuição de Massa PM1.0", center)
-
-
-
-#ggplot(data = surveys_complete, mapping = aes(x = hora_minuto, y = pm1_massa, fill=vento_dir)) + 
-#  geom_bar(stat="identity") + theme(axis.text.x = element_text(angle = 90))
+for(i in 1:length(names)){ 
+  assign(names[i],read.csv(names[i],skip=1, header=TRUE))
+  
+  dataset <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
+  
+  dados_graf = as.data.frame(dataset)
+  
+  graf <- ggplot(data = dados_graf, 
+                 mapping = aes(x = hora_minuto, y = preciptacao, 
+                               fill=pm1_massa)) + 
+    geom_bar(stat="identity")   +       
+    #    geom_bar(aes(y=preciptacao, color="precitacao", group=1)) +
+#    geom_bar(aes(y=pm1_massa, color="pm1_massa", group=2)) + 
+#    geom_line(aes(y=pm4_massa, color="pm4_massa", group=3)) + 
+#    geom_line(aes(y=pm10_massa, color="pm10_massa", group=4)) + 
+    theme(axis.text.x = element_text(angle = 90)) +
+    labs(x = "Hora", y = "Concentracao de Particulado [ug/cm³]") +
+    ggtitle("Índice Pluviométrico [mm]") 
+  
+  dia <- dados_graf$dia_mes_ano[1]
+  
+  pathDest <- "D:/github/Tabelas_DynamoDB/merge/graph/part_precip/"
+  fileDest <- paste(pathDest,  "graf_particulados_", dia, ".png", sep = "")
+  
+  png(filename = fileDest, width = 1000, height = 537, units = 'px')
+  print(graf)
+  dev.off()
+  
+}

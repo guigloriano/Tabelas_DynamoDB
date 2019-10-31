@@ -20,12 +20,11 @@ for(i in 1:length(names)){
   g <- dplyr::group_by(x, dia_mes_ano, h = substr(hora_minuto, 1, 2), 
                        m = floor(as.numeric(substr(hora_minuto, 3, 4))/15))
   
- gg <- dplyr::summarise(g, hora_minuto = dplyr::first(hora_minuto), 
+  gg <- dplyr::summarise(g, hora_minuto = dplyr::first(hora_minuto), 
                          irradiacao = mean(irr), 
                          temperatura = mean(temp),
                          #umidade = mean(hum),
                          
-                        
                          preciptacao = max(rainfall),
                         
                          pm1_massa = mean(massaPM1), 
