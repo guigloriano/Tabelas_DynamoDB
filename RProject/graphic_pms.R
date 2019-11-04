@@ -19,9 +19,9 @@ for(i in 1:length(names)){
   
   graf <- ggplot(data = dados_graf, mapping = aes(x = hora_minuto)) + 
                       geom_line(aes(y=pm1_massa, color="pm1_massa", group=1)) +
-                      geom_line(aes(y=pm2_massa, color="pm2_massa", group=1)) + 
-                      geom_line(aes(y=pm4_massa, color="pm4_massa", group=1)) + 
-                      geom_line(aes(y=pm10_massa, color="pm10_massa", group=1)) + 
+                      geom_line(aes(y=pm2_massa, color="pm2_massa", group=2)) + 
+                      geom_line(aes(y=pm4_massa, color="pm4_massa", group=3)) + 
+                      geom_line(aes(y=pm10_massa, color="pm10_massa", group=4)) + 
                       theme(axis.text.x = element_text(angle = 90)) +
                       labs(x = "Hora", y = "Concentracao de Particulado [ug/cm³]") +
                       ggtitle("Distribuicao de Massa") 

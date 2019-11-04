@@ -3,6 +3,7 @@ library(magrittr)
 library(readr)
 library(tidyverse)
 library(ggplot2)
+library(reshape2)
 
 
 csvPath <- setwd("D:\\github\\Tabelas_DynamoDB\\merge\\daily\\")
@@ -15,25 +16,41 @@ for(i in 1:length(names)){
   
   dados_graf = as.data.frame(dataset)
   
-  graf <- ggplot(data = dados_graf, 
-                 mapping = aes(x = hora_minuto, y = preciptacao, 
-                               fill=pm1_massa)) + 
-    geom_bar(stat="identity")   +       
-    #    geom_bar(aes(y=preciptacao, color="precitacao", group=1)) +
-#    geom_bar(aes(y=pm1_massa, color="pm1_massa", group=2)) + 
-#    geom_line(aes(y=pm4_massa, color="pm4_massa", group=3)) + 
-#    geom_line(aes(y=pm10_massa, color="pm10_massa", group=4)) + 
+  
+  ### GRAFICO BARRAS:  
+  #    df1 <- data.frame(dados_graf$temperatura*100, dados_graf$P_AC, dados_graf$pm1_concentracao*100, dados_graf$preciptacao*1000, dados_graf$hora_minuto)
+  #    df1 <- data.frame(dados_graf$temperatura, dados_graf$P_AC/100, dados_graf$pm1_concentracao, dados_graf$preciptacao, dados_graf$hora_minuto)
+  #    df2 <- melt(df1, id.vars='dados_graf.hora_minuto')
+  #    head(df2)
+  
+  #    p <- ggplot(df2, aes(x=dados_graf.hora_minuto, y=value, fill=variable)) +
+  #      geom_bar(stat='identity', position='dodge') +
+  ###      facet_wrap(~ variable) +
+  #      theme(axis.text.x = element_text(angle = 90))
+  #    plot(p)
+  
+  ### GRAFICO DE LINHA:  
+  p <- ggplot(data = dados_graf, mapping = aes(x = hora_minuto, fill=vento_dir), lwd = 3) + 
+    geom_line(aes(y=temperatura, color="temperatura", group=1)) +
+    geom_line(aes(y=P_AC/100, color="P_AC", group=2)) + 
+    geom_line(aes(y=pm1_concentracao, color="pm1_concentracao", group=3)) + 
+    geom_line(aes(y=preciptacao, color="preciptacao", group=4)) + 
+    geom_line(aes(y=vento_vel, color="vento_vel", group=5)) + 
+    scale_y_continuous(sec.axis = sec_axis(~.*100, name = "POT. AC")) +
     theme(axis.text.x = element_text(angle = 90)) +
-    labs(x = "Hora", y = "Concentracao de Particulado [ug/cm³]") +
-    ggtitle("Índice Pluviométrico [mm]") 
+    labs(y = "Temperatura, PM1 (Concentração) & Prec. Pluviométrica",
+         x = "Horas do Dia",
+         colour = "Parameter") 
+  
+  
   
   dia <- dados_graf$dia_mes_ano[1]
   
-  pathDest <- "D:/github/Tabelas_DynamoDB/merge/graph/part_precip/"
-  fileDest <- paste(pathDest,  "graf_particulados_", dia, ".png", sep = "")
+  pathDest <- "D:/github/Tabelas_DynamoDB/merge/graph/teste/"
+  fileDest <- paste(pathDest,  "teste5_", dia, ".png", sep = "")
   
-  png(filename = fileDest, width = 1000, height = 537, units = 'px')
-  print(graf)
+  png(filename = fileDest, width = 1024, height = 800, units = 'px')
+  print(p)
   dev.off()
   
 }
