@@ -14,6 +14,7 @@ pathSta <- setwd("D:/github/Tabelas_DynamoDB/ambientais_diario_15min/")
 namesSta <- list.files(pattern = "*.csv")
 filesSta <- paste(pathSta, "/", namesSta, sep = "")
 
+
 if (length(filesInv) > length(filesSta) || length(filesInv) == length(filesSta)){
   qtdFiles <- length(namesInv)
 }
@@ -28,11 +29,12 @@ for(i in 1:qtdFiles){
   
   x <- readr::read_csv(dfestacao, col_types = cols(hora_minuto = col_character()))
   y <- readr::read_csv(dfinversor, col_types = cols(hora_minuto = col_character()))
-  z <- merge.data.frame(x = dfestacao, y = dfinversor)
+#  z <- merge.data.frame(x = dfestacao, y = dfinversor)
   
   jointdataset <- merge(x, y, by = c('dia_mes_ano','hora_minuto'))
   jointdataset$P_DC = jointdataset$I_DC * jointdataset$V_DC
   
+#  View(filesSta)
   jointdataset$P_DC <- round(jointdataset$P_DC, digits = 2)
   
   dia <- jointdataset$dia_mes_ano[i]

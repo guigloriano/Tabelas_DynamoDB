@@ -1,12 +1,12 @@
-let date = "20191023"
+let date = "20191104"
 
 const AWSConfig = require('./config')
 const fs = require('fs')
 const csv = require('fast-csv')
 const tableDefiner = require('./define-table')
 const dateFormater = require('./format-date')
-const windDirectionConverter = require('./wind-direction-converter')
-const ws = fs.createWriteStream(`ambientais-cg-${date}.csv`)
+//const windDirectionConverter = require('./wind-direction-converter')
+const ws = fs.createWriteStream(`ambientais-ufms-${date}.csv`)
 const docClient = AWSConfig.docClient;
 
 const requireAWSData = async (params) => {
@@ -28,8 +28,9 @@ const requireAWSData = async (params) => {
 		let PM2Particulates = []
 		let PM4Particulates = []
 		let PM10Particulates = []
-		let irradiations = []
+		let irradiations = []		
 		let irradiationInterval = []
+		let rainfalls = []
 
 
 		docClient.query(params, (err, data) => {
@@ -50,7 +51,7 @@ const requireAWSData = async (params) => {
 						let numPM4 = item.numPM4
 						let numPM10 = item.numPM10
 						let temperature = item.temp
-						let windDir = windDirectionConverter.convert(item.vento_dir)
+						let windDir = item.vento_dir
 						let massaPM1 = item.massaPM1
 						let massaPM2 = item.massaPM2
 						let massaPM4 = item.massaPM4
@@ -59,6 +60,7 @@ const requireAWSData = async (params) => {
 						let averageSize = item.tamanho_medio
 						let humidity = item.hum
 						let irradiation = item.irr
+						let rainfall = item.rainfall
 
 						items.push({
 							date: formatedDate.hourMin,
@@ -76,7 +78,8 @@ const requireAWSData = async (params) => {
 							windDir: windDir || 0,
 							windSpeed: windSpeed || 0,
 							humidity: humidity || 0,
-							irradiation: irradiation
+							irradiation: irradiation, 
+							rainfall: rainfall || 0
 						})
 
 						interval.push(formatedDate.hourMin)
@@ -111,6 +114,7 @@ const requireAWSData = async (params) => {
 							windSpeeds.push(item.windSpeed)
 							humidities.push(item.humidity)
 							irradiations.push(item.irradiation)
+							rainfalls.push(item.rainfall)
 						}
 					}
 				}
@@ -133,7 +137,8 @@ const requireAWSData = async (params) => {
 				windDirections,
 				windSpeeds,
 				humidities,
-				irradiations
+				irradiations, 
+				rainfalls
 			])
 		})
 	})
@@ -186,10 +191,11 @@ const readForOneDay = async (date) => {
 					windSpeeds: response[13],
 					humidities: response[14],
 					irradiation: response[15],
+					rainfalls: response[16],
 					day: dateToRequest.day,
 					month: dateToRequest.month,
 					year: dateToRequest.year,
-					monthDay: dateToRequest.day + '/' + dateToRequest.month + '/' + dateToRequest.year,
+					monthDay: dateToRequest.year + dateToRequest.month + dateToRequest.day,
 				}
 
 				resolve(items)
@@ -208,21 +214,22 @@ readForOneDay(date)
 		let arrayToWrite = []
 		
 		arrayToWrite.push([
-			'Data',
-			'Horario',
-			'Irradiacao (W/m^3)',
-			'PM1 massa (mg/m^3)',
-			'PM2 massa (mg/m^3)',
-			'PM4 massa (mg/m^3)',
-			'PM10 massa (mg/m^3)',
-			'PM1 concentracao (mg/m^3)',
-			'PM2 concentracao (mg/m^3)',
-			'PM4 concentracao (mg/m^3)',
-			'PM10 concentracao (mg/m^3)',
-			'Concentracao padrao (mg/m^3)',
-			'Temperatura (°C)',
-			'Direcao do vento (°)',
-			'Velocidade do vento km/h'
+			'dia_mes_ano',
+			'hora_minuto',
+			'irr',
+			'massaPM1',
+			'massaPM2',
+			'massaPM4',
+			'massaPM10',
+			'numPM1',
+			'numPM2',
+			'numPM4',
+			'numPM10',
+			'tamanho_medio',
+			'temp',
+			'vento_dir',
+			'vento_vel',
+			'rainfall'
 		])
 
 		for (let i = 0; i < response.interval.length; i++) {
@@ -241,7 +248,8 @@ readForOneDay(date)
 				response.averageSizes[i],
 				response.temperatures[i],
 				response.windDirections[i],
-				response.windSpeeds[i]
+				response.windSpeeds[i],
+				response.rainfalls[i]
 			])
 
 			console.log("inserindo: " + response.interval[i])

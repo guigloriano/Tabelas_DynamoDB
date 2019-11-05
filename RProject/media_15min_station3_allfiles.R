@@ -69,5 +69,4 @@ for(i in 1:length(names)){
   salvarArq_name <- paste(salvarArq_path, "15min_", names[i], sep = "")
   write_csv(y, salvarArq_name)
   
-  }
-
+}
