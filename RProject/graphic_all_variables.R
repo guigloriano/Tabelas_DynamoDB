@@ -10,9 +10,18 @@ csvPath <- setwd("D:\\github\\Tabelas_DynamoDB\\merge\\daily\\")
 names <- list.files(pattern = "*.csv")
 
 for(i in 1:length(names)){ 
-  assign(names[i],read.csv(names[i],skip=1, header=TRUE))
   
+  
+ # i = 21
+  assign(names[i],read.csv(names[i],skip=0, header=TRUE))
   dataset <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
+
+  if (i == 21){
+    dataset$I_DC[4] <- 0
+    dataset$P_DC[4] <- 0
+  }
+  
+  
   
   dados_graf = as.data.frame(dataset)
   

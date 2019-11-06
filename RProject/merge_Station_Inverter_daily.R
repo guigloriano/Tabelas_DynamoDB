@@ -15,15 +15,7 @@ namesSta <- list.files(pattern = "*.csv")
 filesSta <- paste(pathSta, "/", namesSta, sep = "")
 
 
-if (length(filesInv) > length(filesSta) || length(filesInv) == length(filesSta)){
-  qtdFiles <- length(namesInv)
-}
-
-if (length(filesInv) < length(filesSta)){
-  qtdFiles <- length(filesSta)
-}
-
-for(i in 1:qtdFiles){ 
+for(i in 1:length(filesInv)){ 
   dfestacao <- filesSta[i]
   dfinversor <- filesInv[i]
   
