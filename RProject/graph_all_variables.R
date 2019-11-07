@@ -17,18 +17,19 @@ for(i in 1:length(names)){
   dados_graf = as.data.frame(dataset)
   
   p <- ggplot(data = dados_graf, mapping = aes(x = hora_minuto)) + 
-    geom_line(aes(y=temperatura, color="temperatura", group=1)) +
+    geom_line(aes(y=temp, color="temperatura", group=1)) +
     
     geom_line(aes(y=vento_dir/2, color="vento_dir/2", group=6)) + 
-    geom_line(aes(y=preciptacao*10, color="preciptacao*10", group=7)) + 
+    geom_line(aes(y=vento_vel, color="vento_vel", group=6)) + 
+    geom_line(aes(y=rainfall*10, color="preciptacao*10", group=7)) + 
     
-    geom_line(aes(y=pm1_concentracao, color="pm1_concentracao", group=4)) + 
-    geom_line(aes(y=pm2_concentracao, color="pm2_concentracao", group=5)) + 
+    geom_line(aes(y=numPM1, color="pm1_concentracao", group=4)) + 
+    geom_line(aes(y=numPM2, color="pm2_concentracao", group=5)) + 
     
     geom_line(aes(y=P_AC/100, color="P_AC/100", group=2)) + 
     geom_line(aes(y=P_DC/100, color="P_DC/100", group=3)) + 
     
-    geom_line(aes(y=irradiacao/10, color="irr_est/10", group=8)) + 
+    geom_line(aes(y=irr/10, color="irr_est/10", group=8)) + 
     geom_line(aes(y=IRR/10, color="irr_inv/10", group=9, )) +
     
     scale_y_continuous(sec.axis = sec_axis(~.*10, name = "POT. AC")) +
@@ -39,8 +40,8 @@ for(i in 1:length(names)){
 
   dia <- dados_graf$dia_mes_ano[1]
   
-  pathDest <- "D:/github/Tabelas_DynamoDB/merge/graph/all_variables/"
-  fileDest <- paste(pathDest,  "all_variable4_", dia, ".png", sep = "")
+  pathDest <- "D:/github/Tabelas_DynamoDB/merge/graph/all_variables3/"
+  fileDest <- paste(pathDest,  "all_variables_", dia, ".png", sep = "")
   
   png(filename = fileDest, width = 1024, height = 800, units = 'px')
   plot(p)

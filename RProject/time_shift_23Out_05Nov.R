@@ -5,11 +5,10 @@ library(readr)
 library("stringr")
 library(plyr)  
 
-files <- setwd("D:/github/Tabelas_DynamoDB/inversor_diario_15min/")
+files <- setwd("D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\")
 names <- list.files(pattern = "*.csv")
 
-for(i in 21:34){ 
-
+for(i in 16:29){ 
   assign(names[i],read.csv(names[i],skip=1, header=TRUE))
   
   x <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
@@ -20,7 +19,7 @@ for(i in 21:34){
   t <- t - lubridate::as.period(1, unit = "hours")
   x$hora_minuto <- as.numeric(strftime(t, "%H%M%S"))
 
-  salvarArq_path <- "D:\\github\\Tabelas_DynamoDB\\inversor_diario_15min\\"
+  salvarArq_path <- "D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\hora_corrigida\\"
   salvarArq_name <- paste(salvarArq_path, names[i], sep = "")
   write_csv(x, salvarArq_name)
 

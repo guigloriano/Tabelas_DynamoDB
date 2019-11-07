@@ -21,21 +21,21 @@ for(i in 1:length(names)){
                        m = floor(as.numeric(substr(hora_minuto, 3, 4))/15))
   
   gg <- dplyr::summarise(g, hora_minuto = dplyr::first(hora_minuto), 
-                         irradiacao = mean(irr), 
-                         temperatura = mean(temp),
+                         irr = mean(irr), 
+                         temp = mean(temp),
                          #umidade = mean(hum),
                          
-                         preciptacao = max(rainfall),
+                         rainfall = max(rainfall),
                         
-                         pm1_massa = mean(massaPM1), 
-                         pm2_massa = mean(massaPM2), 
-                         pm4_massa = mean(massaPM4), 
-                         pm10_massa = mean(massaPM10), 
-                         pm1_concentracao = mean(numPM1), 
-                         pm2_concentracao = mean(numPM2), 
-                         pm4_concentracao = mean(numPM4), 
-                         pm10_concentracao = mean(numPM10), 
-                         concentracao_media = mean(tamanho_medio), 
+                         massaPM1 = mean(massaPM1), 
+                         massaPM2 = mean(massaPM2), 
+                         massaPM4 = mean(massaPM4), 
+                         massaPM10 = mean(massaPM10), 
+                         numPM1 = mean(numPM1), 
+                         numPM2 = mean(numPM2), 
+                         numPM4 = mean(numPM4), 
+                         numPM10 = mean(numPM10), 
+                         tamanho_medio = mean(tamanho_medio), 
                          vento_dir=mean(vento_dir),
                          vento_vel=mean(vento_vel), 
                 
@@ -48,20 +48,20 @@ for(i in 1:length(names)){
   
   #write_csv(y,'C:\\Users\\LSCAD\\Documents\\Projeto\\Tabelas_DynamoDB\\ambientais_diarios_15min\\Ambientais15m_CG_20191004.csv')
 
-  y$irradiacao <-round(y$irradiacao, digits = 2)
-  y$temperatura <- round(y$temperatura, digits = 2)
+  y$irr <-round(y$irr, digits = 2)
+  y$temp <- round(y$temp, digits = 2)
   #y$preciptacao <-round(y$preciptacao, digits = 2)
   
     
-  y$pm1_massa <- round(y$pm1_massa, digits = 2)
-  y$pm2_massa <- round(y$pm2_massa, digits = 2)
-  y$pm4_massa <- round(y$pm4_massa, digits = 2)
-  y$pm10_massa <- round(y$pm10_massa, digits = 2)
-  y$pm1_concentracao <- round(y$pm1_concentracao, digits = 2)
-  y$pm2_concentracao <- round(y$pm2_concentracao, digits = 2)
-  y$pm4_concentracao <- round(y$pm4_concentracao, digits = 2)
-  y$pm10_concentracao <- round(y$pm10_concentracao, digits = 2)
-  y$concentracao_media <- round(y$concentracao_media, digits = 2)
+  y$massaPM1 <- round(y$massaPM1, digits = 2)
+  y$massaPM2 <- round(y$massaPM2, digits = 2)
+  y$massaPM4 <- round(y$massaPM4, digits = 2)
+  y$massaPM10 <- round(y$massaPM10, digits = 2)
+  y$numPM1 <- round(y$numPM1, digits = 2)
+  y$numPM2 <- round(y$numPM2, digits = 2)
+  y$numPM4 <- round(y$numPM4, digits = 2)
+  y$numPM10 <- round(y$numPM10, digits = 2)
+  y$tamanho_medio <- round(y$tamanho_medio, digits = 2)
   y$vento_dir <- round(y$vento_dir, digits = 2)
   y$vento_vel <- round(y$vento_vel, digits = 2)
   

@@ -5,7 +5,7 @@ library("stringr")
 library(plyr)  
 
 
-files <- setwd("D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\")
+files <- setwd("D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\hora_corrigida\\")
 names <- list.files(pattern = "*.csv")
 
 for(i in 1:length(names)){ 

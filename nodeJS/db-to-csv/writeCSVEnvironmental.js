@@ -1,4 +1,4 @@
-let date = "20191105"
+let date = "20191004"
 
 const AWSConfig = require('./config')
 const fs = require('fs')
@@ -56,7 +56,7 @@ const requireAWSData = async (params) => {
 						let massaPM2 = item.massaPM2
 						let massaPM4 = item.massaPM4
 						let massaPM10 = item.massaPM10
-						let windSpeed = item.ventor_vel
+						let windSpeed = item.vento_vel
 						let averageSize = item.tamanho_medio
 						let humidity = item.hum
 						let irradiation = item.irr
