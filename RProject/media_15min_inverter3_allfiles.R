@@ -9,7 +9,7 @@ files <- setwd("D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\")
 names <- list.files(pattern = "*.csv")
 
 for(i in 1:length(names)){ 
-  assign(names[i],read.csv(names[i],skip=1, header=TRUE))
+  assign(names[i],read.csv(names[i],skip=0, header=TRUE))
   
   x <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
   
