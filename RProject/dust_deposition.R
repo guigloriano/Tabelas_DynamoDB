@@ -1,3 +1,6 @@
+
+#install.packages("pracma")
+library(pracma)
 library(readr)
 
 csvPath <- setwd("D:\\github\\Tabelas_DynamoDB\\ambientais_diario_min\\")
@@ -13,7 +16,7 @@ for(i in 1:length(names)){
   # Temperatura media em °C
   Temp_Media = round(mean(x$temp), digits = 5)
   # Soma da Massa dos Particulados ug/m³
-  ConcentracaoMassa = round(sum(x$massaPM1) + sum(x$massaPM2), digits = 5)
+  ConcentracaoMassa = round(mean(x$massaPM1) + mean(x$massaPM2), digits = 5)
   
   # Ra = resistencia aerodinamica
   # Cds = coeficiente de arrasto da superfície [ 1.2 * 10^(-2) ]
@@ -71,15 +74,14 @@ for(i in 1:length(names)){
   Vd1 = 1/(Ra+Rb) + Vs*cos(theta)
   Pd = Vd1 * ConcentracaoMassa * 10^(-6)
   Nloss = 0.015 * Pd
-  
+
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
+  # t unidade de tempo em segundos
+  t_sec = 86400
   Vd2 = 1/(Ra+Rb) + Vs
-  m = Vd2 * ConcentracaoMassa * 10^(-6)  * cos(theta)
   
-  x_gauss = 0.17*m^(0.847)
-  teste = erf(x_gauss)
-  
-  help(erf)
-  
-  
+  m = Vd2 * ConcentracaoMassa * 10^(-6)  * cos(theta) * t_sec
+  x_gauss = 0.17*m^(0.8473)
+  SR = 1 - 34.37*erf(x_gauss)
+
 }
