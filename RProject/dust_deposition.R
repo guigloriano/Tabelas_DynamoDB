@@ -1,13 +1,26 @@
 
 #install.packages("pracma")
+#install.packages("data.table")              # Install data.table package
 library(pracma)
 library(readr)
 
 csvPath <- setwd("D:\\github\\Tabelas_DynamoDB\\ambientais_diario_min\\")
 names <- list.files(pattern = "*.csv")
 
+df <- setNames(data.frame(matrix(ncol = 11, nrow = 1)), 
+               c("dia", "Vd", "Pd", "Pd2", "Nloss", "Nloss2", "Vd2", "m", "x_gauss", "SR", "SR2" ))
+
+Pd2 <- 0
+SR2 <- 0 
+Nloss2 <- 0
+
+aux1 <- 0
+aux2 <- 0
+aux3 <- 0
+aux4 <- 0 
+
 for(i in 1:length(names)){ 
-  i = 1
+ # i = 1
   assign(names[i],read.csv(names[i],skip=1, header=TRUE))
   x <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
 
@@ -15,8 +28,20 @@ for(i in 1:length(names)){
   Vel_Med_Vento = round(mean(x$vento_vel), digits = 5)
   # Temperatura media em °C
   Temp_Media = round(mean(x$temp), digits = 5)
+  
   # Soma da Massa dos Particulados ug/m³
   ConcentracaoMassa = round(mean(x$massaPM1) + mean(x$massaPM2), digits = 5)
+  aux1 <- c(aux1, ConcentracaoMassa)
+  if (aux1[1] == 0){
+    VetorConcentracaoMassa <- aux1[-1]
+  }
+  
+  MediaConcentracaoMassa <- mean(VetorConcentracaoMassa)
+  aux2 <- c(aux2, MediaConcentracaoMassa)
+  if (aux2[1] == 0){
+    VetorConcentracaoMassaMedia <- aux2[-1]
+  }
+  
   
   # Ra = resistencia aerodinamica
   # Cds = coeficiente de arrasto da superfície [ 1.2 * 10^(-2) ]
@@ -68,20 +93,51 @@ for(i in 1:length(names)){
   
   # theta = inclinacao dos modulos [ em ° ]
   theta = (15*pi)/180
+
   
   ### Modelo 01 - On temporal modelling (...) in seven cities
   # Vd = velocidade de deposicao 
   Vd1 = 1/(Ra+Rb) + Vs*cos(theta)
-  Pd = Vd1 * ConcentracaoMassa * 10^(-6)
+  
+  Pd = Vd1 * VetorConcentracaoMassaMedia[i] * 10^(-6) * i
+  aux3 <- c(aux3, Pd)
+  
   Nloss = 0.015 * Pd
+  aux4 <- c(aux4, Nloss)
 
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
   # t unidade de tempo em segundos
-  t_sec = 86400
+  t_sec = 86400*i
   Vd2 = 1/(Ra+Rb) + Vs
   
-  m = Vd2 * ConcentracaoMassa * 10^(-6)  * cos(theta) * t_sec
+  
+  m = Vd2 * VetorConcentracaoMassaMedia[i] * 10^(-6) * cos(theta) * t_sec
   x_gauss = 0.17*m^(0.8473)
-  SR = 1 - 34.37*erf(x_gauss)
+  SR = 1 - 34.37*erf(x_gauss) 
+  
+  
+  m
+  x_gauss
+  SR
+  
+#  m = Vd2 * ConcentracaoMassa * 10^(-6)  * cos(theta) * 1
+#  x_gauss = 0.17*m^(0.8473)
+#  SR = 1 - 34.37*erf(x_gauss)
+  Pd
+  Nloss
+  
+
+  
+#  1 - Nloss * 10^6
+#  aux2 = 1 - Nloss
+  
+  
+  df <- rbind(df, list(x$dia_mes_ano[1], 
+                       Vd1, Pd, Pd2, Nloss, Nloss2, Vd2, m, x_gauss, SR, SR2), deparse.level = 1)
+  
+
 
 }
+
+df <- df[-c(1),]
+write_csv(df,'D:\\teste.csv')
