@@ -98,7 +98,7 @@ for(i in 1:length(names)){
   # Vd = velocidade de deposicao 
   Vd1 = 1/(Ra+Rb) + Vs*cos(theta)
   
-  Pd = Vd1 * MediaConcentracaoMassa[i] * 10^(-6) * i
+  Pd = Vd1 * MediaConcentracaoMassa[i] * 10^(-6) * i #MediaConcentracao
   Nloss = 0.015 * Pd
 
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
@@ -107,7 +107,7 @@ for(i in 1:length(names)){
   Vd2 = 1/(Ra+Rb) + Vs
   
   
-  m = Vd2 * MediaConcentracaoMassa[i] * 10^(-6) * cos(theta) * t_sec
+  m = Vd2 * MediaConcentracaoMassa[i] * 10^(-6) * cos(theta) * t_sec # MediaMassa
   x_gauss = 0.17*m^(0.8473)
   SR = 1 - 34.37*erf(x_gauss) 
   
