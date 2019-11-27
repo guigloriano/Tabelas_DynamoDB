@@ -7,17 +7,16 @@ library(readr)
 csvPath <- setwd("D:\\github\\Tabelas_DynamoDB\\ambientais_diario_min\\")
 names <- list.files(pattern = "*.csv")
 
-df <- setNames(data.frame(matrix(ncol = 11, nrow = 1)), 
-               c("dia", "Vd", "Pd", "Pd2", "Nloss", "Nloss2", "Vd2", "m", "x_gauss", "SR", "SR2" ))
+df <- setNames(data.frame(matrix(ncol = 8, nrow = 1)), 
+               c("dia", "Vd1", "Pd", "Nloss", 
+                 "Vd2", "m", "x_gauss", "SR" ))
 
 Pd2 <- 0
 SR2 <- 0 
 Nloss2 <- 0
 
-aux1 <- 0
-aux2 <- 0
-aux3 <- 0
-aux4 <- 0 
+auxMassa <- 0
+auxMediaMassa <- 0
 
 for(i in 1:length(names)){ 
  # i = 1
@@ -30,16 +29,16 @@ for(i in 1:length(names)){
   Temp_Media = round(mean(x$temp), digits = 5)
   
   # Soma da Massa dos Particulados ug/m³
-  ConcentracaoMassa = round(mean(x$massaPM1) + mean(x$massaPM2), digits = 5)
-  aux1 <- c(aux1, ConcentracaoMassa)
-  if (aux1[1] == 0){
-    VetorConcentracaoMassa <- aux1[-1]
+  ConcentracaoMassa = round(mean(x$massaPM1) + mean(x$massaPM2), digits = 8)
+  auxMassa <- c(auxMassa, ConcentracaoMassa)
+  if (auxMassa[1] == 0){
+    ListaConcentracaoMassa <- auxMassa[-1]
   }
   
-  MediaConcentracaoMassa <- mean(VetorConcentracaoMassa)
-  aux2 <- c(aux2, MediaConcentracaoMassa)
-  if (aux2[1] == 0){
-    VetorConcentracaoMassaMedia <- aux2[-1]
+  MediaConcentracaoMassa <- mean(ListaConcentracaoMassa)
+  auxMediaMassa <- c(auxMediaMassa, MediaConcentracaoMassa)
+  if (auxMediaMassa[1] == 0){
+    MediaConcentracaoMassa <- auxMediaMassa[-1]
   }
   
   
@@ -99,11 +98,8 @@ for(i in 1:length(names)){
   # Vd = velocidade de deposicao 
   Vd1 = 1/(Ra+Rb) + Vs*cos(theta)
   
-  Pd = Vd1 * VetorConcentracaoMassaMedia[i] * 10^(-6) * i
-  aux3 <- c(aux3, Pd)
-  
+  Pd = Vd1 * MediaConcentracaoMassa[i] * 10^(-6) * i
   Nloss = 0.015 * Pd
-  aux4 <- c(aux4, Nloss)
 
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
   # t unidade de tempo em segundos
@@ -111,7 +107,7 @@ for(i in 1:length(names)){
   Vd2 = 1/(Ra+Rb) + Vs
   
   
-  m = Vd2 * VetorConcentracaoMassaMedia[i] * 10^(-6) * cos(theta) * t_sec
+  m = Vd2 * MediaConcentracaoMassa[i] * 10^(-6) * cos(theta) * t_sec
   x_gauss = 0.17*m^(0.8473)
   SR = 1 - 34.37*erf(x_gauss) 
   
@@ -120,22 +116,13 @@ for(i in 1:length(names)){
   x_gauss
   SR
   
-#  m = Vd2 * ConcentracaoMassa * 10^(-6)  * cos(theta) * 1
-#  x_gauss = 0.17*m^(0.8473)
-#  SR = 1 - 34.37*erf(x_gauss)
   Pd
   Nloss
   
-
   
-#  1 - Nloss * 10^6
-#  aux2 = 1 - Nloss
+  df <- rbind(df, list(x$dia_mes_ano[1], Vd1, Pd, Nloss, 
+                                         Vd2, m, x_gauss, SR), deparse.level = 1)
   
-  
-  df <- rbind(df, list(x$dia_mes_ano[1], 
-                       Vd1, Pd, Pd2, Nloss, Nloss2, Vd2, m, x_gauss, SR, SR2), deparse.level = 1)
-  
-
 
 }
 
