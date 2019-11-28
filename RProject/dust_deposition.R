@@ -11,9 +11,10 @@ df <- setNames(data.frame(matrix(ncol = 8, nrow = 1)),
                c("dia", "Vd1", "Pd", "Nloss", 
                  "Vd2", "m", "x_gauss", "SR" ))
 
-Pd2 <- 0
-SR2 <- 0 
-Nloss2 <- 0
+
+
+auxVento <- 0
+auxVentoMedia <- 0
 
 auxMassa <- 0
 auxMassaMedia <- 0
@@ -21,20 +22,43 @@ auxMassaMedia <- 0
 auxConcentracao <- 0
 auxConcentracaMedia <- 0
 
+
+
+UAux <- 0
+RaAux <- 0
+RbAux <- 0
+VsAux <- 0
+VdAux <- 0
+
+
+
 for(i in 1:length(names)){ 
  # i = 1
   assign(names[i],read.csv(names[i],skip=1, header=TRUE))
   x <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
 
-  # Vel_Med_Vento eh dado em km/h
-  Vel_Med_Vento = round(mean(x$vento_vel), digits = 5)
   # Temperatura media em °C
   Temp_Media = round(mean(x$temp), digits = 5)
   
-  # Soma da Massa dos Particulados ug/m³
   
-  MassaMediaParticulados = round(mean(x$massaPM1) + mean(x$massaPM2), digits = 8)
-  auxMassa <- c(auxMassa, MassaMediaParticulados)
+  
+  # Vel_Med_Vento eh dado em km/h
+  Vel_Med_Vento = round(mean(x$vento_vel), digits = 5)
+  auxVento <- c(auxVento, Vel_Med_Vento)
+  if (auxVento[1] == 0){
+    ListaVento <- auxVento[-1]
+  }
+  
+  Media_Vel_Med_Vento = mean(ListaVento)
+  auxVentoMedia <- c(auxVentoMedia, Media_Vel_Med_Vento)
+  if (auxVentoMedia[1] == 0){
+    ListaVentoMedia <- auxVentoMedia[-1]
+  }
+  
+  
+  # Soma da Massa dos Particulados ug/m³
+  MassaParticulados = round(mean(x$massaPM1) + mean(x$massaPM2), digits = 8)
+  auxMassa <- c(auxMassa, MassaParticulados)
   if (auxMassa[1] == 0){
     ListaMassa <- auxMassa[-1]
   }
@@ -48,8 +72,8 @@ for(i in 1:length(names)){
   
   #######################################################
   
-  ConcentracaoMediaParticulados = round(mean(x$numPM1) + mean(x$numPM2), digits = 8)
-  auxConcentracao <- c(auxConcentracao, ConcentracaoMediaParticulados)
+  ConcentracaoParticulados = round(mean(x$numPM1) + mean(x$numPM2), digits = 8)
+  auxConcentracao <- c(auxConcentracao, ConcentracaoParticulados)
   if (auxConcentracao[1] == 0){
     ListaConcentracao <- auxConcentracao[-1]
   }
@@ -64,8 +88,12 @@ for(i in 1:length(names)){
   # Cds = coeficiente de arrasto da superfície [ 1.2 * 10^(-2) ]
   # U = velocidade media do vento (m/s)
   Cds = 1.2*10^(-2)
-  U = Vel_Med_Vento / 3.6
+  U = ListaVentoMedia[i] / 3.6
+  
+  UAux <- c(UAux, U)
   Ra = 1/(Cds * U)
+  
+  RaAux <- c(RaAux, Ra)
   
   # U_estrela = velocidade de atrito
   # constante de Von Karman [ VonKarman = 0.41 ]
@@ -84,8 +112,7 @@ for(i in 1:length(names)){
   k = 1.38*10^(-23)
   T_Ar = Temp_Media + 273.15
   u = 1.81*10^(-5)
-  #Dp = 2.5*10^(-6)
-  Dp = 2.5
+  Dp = 2.5*10^(-6)
   D = k*T_Ar/(3 * pi * u * Dp )
   
   # Sc = numero de Schmidt
@@ -101,13 +128,18 @@ for(i in 1:length(names)){
   Pp = 1000
   g = 9.81
   Cc = 1
-  Vs = ((1 * (Dp^2) * Pp * g)/(18 * u)) * Cc
+  
+  Vs = ( (Dp^2 * Pp * g)/(18 * u) ) * Cc
+  
+  VsAux <- c(VsAux, Vs)
   
   # St = numero de Strokes
   St = ( U_estrela^2 * Vs)/(g * v)
   
   # Rb = resistencia da camada quasi-laminar
   Rb = 1/(3 * U_estrela * (Sc^(-0.5) + (St/(1+St))^(2) ) )
+  
+  RbAux <- c(RbAux, Rb)
   
   # theta = inclinacao dos modulos [ em ° ]
   theta = (15*pi)/180
@@ -117,18 +149,19 @@ for(i in 1:length(names)){
   # Vd = velocidade de deposicao 
   Vd1 = 1/(Ra+Rb) + Vs*cos(theta)
   
-  Pd = Vd1 * ListaConcentracaoMedia[i] * 10^(-6) * i #MediaConcentracao
-  Nloss = 0.015 * Pd
+  Pd = round( Vd1 * ListaConcentracaoMedia[i] * 10^(-6) * i , 6) #MediaConcentracao
+  Nloss = round ( 0.015 * Pd , 6)
 
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
   # t unidade de tempo em segundos
   t_sec = 86400*i
-  Vd2 = 1/(Ra+Rb) + Vs
+  Vd2 = round ( 1/(Ra+Rb) + Vs , 6)
   
+  VdAux <- c(VdAux, Vd2)
   
-  m = Vd2 * ListaMassaMedia[i] * 10^(-6) * cos(theta) * t_sec # MediaMassa
-  x_gauss = 0.17*m^(0.8473)
-  SR = 1 - 34.37*erf(x_gauss) 
+  m = round(Vd2 * ListaMassaMedia[i] * 10^(-6) * cos(theta) * t_sec, 6) # MediaMassa
+  x_gauss = round ( 0.17*m^(0.8473) , 6 )
+  SR = round ( 1 - 34.37*erf(x_gauss) , 6 ) 
   
   
   m
