@@ -16,7 +16,10 @@ SR2 <- 0
 Nloss2 <- 0
 
 auxMassa <- 0
-auxMediaMassa <- 0
+auxMassaMedia <- 0
+
+auxConcentracao <- 0
+auxConcentracaMedia <- 0
 
 for(i in 1:length(names)){ 
  # i = 1
@@ -29,18 +32,33 @@ for(i in 1:length(names)){
   Temp_Media = round(mean(x$temp), digits = 5)
   
   # Soma da Massa dos Particulados ug/m³
-  ConcentracaoMassa = round(mean(x$massaPM1) + mean(x$massaPM2), digits = 8)
-  auxMassa <- c(auxMassa, ConcentracaoMassa)
+  
+  MassaMediaParticulados = round(mean(x$massaPM1) + mean(x$massaPM2), digits = 8)
+  auxMassa <- c(auxMassa, MassaMediaParticulados)
   if (auxMassa[1] == 0){
-    ListaConcentracaoMassa <- auxMassa[-1]
+    ListaMassa <- auxMassa[-1]
   }
   
-  MediaConcentracaoMassa <- mean(ListaConcentracaoMassa)
-  auxMediaMassa <- c(auxMediaMassa, MediaConcentracaoMassa)
-  if (auxMediaMassa[1] == 0){
-    MediaConcentracaoMassa <- auxMediaMassa[-1]
+  MassaMedia <- mean(ListaMassa)
+  auxMassaMedia <- c(auxMassaMedia, MassaMedia)
+  if (auxMassaMedia[1] == 0){
+    ListaMassaMedia <- auxMassaMedia[-1]
   }
   
+  
+  #######################################################
+  
+  ConcentracaoMediaParticulados = round(mean(x$numPM1) + mean(x$numPM2), digits = 8)
+  auxConcentracao <- c(auxConcentracao, ConcentracaoMediaParticulados)
+  if (auxConcentracao[1] == 0){
+    ListaConcentracao <- auxConcentracao[-1]
+  }
+  
+  ConcentracaoMediaParticulados <- mean(ListaConcentracao)
+  auxConcentracaMedia <- c(auxConcentracaMedia, ConcentracaoMediaParticulados)
+  if (auxConcentracaMedia[1] == 0){
+    ListaConcentracaoMedia <- auxConcentracaMedia[-1]
+  }
   
   # Ra = resistencia aerodinamica
   # Cds = coeficiente de arrasto da superfície [ 1.2 * 10^(-2) ]
@@ -59,14 +77,15 @@ for(i in 1:length(names)){
   U_estrela = VonKarman * U/ (log(h/z0))
   
   # D = coeficiente de difusa browniano [ m²/s ]
-  # k = constante de Boltzmann [ 1.38 * 10^(-23) J/k]
+  # k = constante de Boltzmann [ 1.38 * 10^(-23) J/k ] 
   # T_Ar = temperatura do ar [ em Kelvin, K = °C + 273,15 ]
   # u = viscosidade do ar [ 1.81 * 10^(-5) kg/ms ]
   # Dp = diametro da particula [ m , PM2.5 = 2.5*10^-(6)]
   k = 1.38*10^(-23)
   T_Ar = Temp_Media + 273.15
   u = 1.81*10^(-5)
-  Dp = 2.5*10^(-6)
+  #Dp = 2.5*10^(-6)
+  Dp = 2.5
   D = k*T_Ar/(3 * pi * u * Dp )
   
   # Sc = numero de Schmidt
@@ -98,7 +117,7 @@ for(i in 1:length(names)){
   # Vd = velocidade de deposicao 
   Vd1 = 1/(Ra+Rb) + Vs*cos(theta)
   
-  Pd = Vd1 * MediaConcentracaoMassa[i] * 10^(-6) * i #MediaConcentracao
+  Pd = Vd1 * ListaConcentracaoMedia[i] * 10^(-6) * i #MediaConcentracao
   Nloss = 0.015 * Pd
 
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
@@ -107,7 +126,7 @@ for(i in 1:length(names)){
   Vd2 = 1/(Ra+Rb) + Vs
   
   
-  m = Vd2 * MediaConcentracaoMassa[i] * 10^(-6) * cos(theta) * t_sec # MediaMassa
+  m = Vd2 * ListaMassaMedia[i] * 10^(-6) * cos(theta) * t_sec # MediaMassa
   x_gauss = 0.17*m^(0.8473)
   SR = 1 - 34.37*erf(x_gauss) 
   
@@ -127,4 +146,4 @@ for(i in 1:length(names)){
 }
 
 df <- df[-c(1),]
-write_csv(df,'D:\\teste.csv')
+write_csv(df,'D:\\github\\Tabelas_DynamoDB\\teste.csv')
