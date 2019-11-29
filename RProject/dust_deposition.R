@@ -1,3 +1,5 @@
+
+
 #    https://www.wxforum.net/index.php?PHPSESSID=9e6242ddde79abbe07549332715a0555&
 #    http://colaweb.gmu.edu/dev/clim301/lectures/wind/wind-uv
 #    http://mmc2.geofisica.unam.mx/cursos/geoest/Articulos/Geostatistics/Non-Linear%20Surface%20Interpolations.htm
@@ -42,10 +44,10 @@ VdAux <- 0
 
 
 for(i in 1:length(names)){ 
-#  i = 4
+  #  i = 4
   assign(names[i],read.csv(names[i],skip=1, header=TRUE))
   x <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
-
+  
   # Temperatura media em °C
   Temp_Media = round(mean(x$temp), digits = 5)
   
@@ -186,14 +188,14 @@ for(i in 1:length(names)){
   
   # theta = inclinacao dos modulos [ em ° ]
   theta = 15
-
+  
   ### Modelo 01 - On temporal modelling (...) in seven cities
   # Vd = velocidade de deposicao 
   Vd1 = 1/(Ra+Rb) + Vs*cosd(theta)
   
   Pd = round( Vd1 * ListaConcentracaoMedia[i] * 10^(-6) * i , 6) #MediaConcentracao
   Nloss = 0.015 * Pd
-
+  
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
   # t unidade de tempo em segundos
   t_sec = 86400*i
@@ -213,12 +215,12 @@ for(i in 1:length(names)){
   Pd
   Nloss
   
-
+  
   
   df <- rbind(df, list(x$dia_mes_ano[1], Vd1, Pd, Nloss, 
-                                         Vd2, m, x_gauss, SR), deparse.level = 1)
+                       Vd2, m, x_gauss, SR), deparse.level = 1)
   
-
+  
 }
 
 test <- test[-c(1),]
