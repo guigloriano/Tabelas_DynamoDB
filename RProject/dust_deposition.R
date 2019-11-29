@@ -1,3 +1,12 @@
+#    https://www.wxforum.net/index.php?PHPSESSID=9e6242ddde79abbe07549332715a0555&
+#    http://colaweb.gmu.edu/dev/clim301/lectures/wind/wind-uv
+#    http://mmc2.geofisica.unam.mx/cursos/geoest/Articulos/Geostatistics/Non-Linear%20Surface%20Interpolations.htm
+#    https://www.researchgate.net/post/How_to_interpolate_wind_direction_in_GIS_using_transformation
+#
+#
+#
+
+
 
 #install.packages("pracma")
 #install.packages("data.table")              # Install data.table package
@@ -11,6 +20,8 @@ df <- setNames(data.frame(matrix(ncol = 8, nrow = 1)),
                c("dia", "Vd1", "Pd", "Nloss", 
                  "Vd2", "m", "x_gauss", "SR" ))
 
+test <- setNames(data.frame(matrix(ncol = 4, nrow = 1)),
+                 c("DVr1", "IDV1", "DVr2" , "IDV2"))
 
 
 auxVento <- 0
@@ -22,8 +33,6 @@ auxMassaMedia <- 0
 auxConcentracao <- 0
 auxConcentracaMedia <- 0
 
-
-
 UAux <- 0
 RaAux <- 0
 RbAux <- 0
@@ -33,12 +42,46 @@ VdAux <- 0
 
 
 for(i in 1:length(names)){ 
- # i = 1
+#  i = 4
   assign(names[i],read.csv(names[i],skip=1, header=TRUE))
   x <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
 
   # Temperatura media em °C
   Temp_Media = round(mean(x$temp), digits = 5)
+  
+  # Direcao do Vento http://tornado.sfsu.edu/geosciences/classes/m430/Wind/WindDirection.html
+  # https://www.wxforum.net/index.php?topic=8660.0
+  C_zonal_U      = round( -x$vento_vel * sind(x$vento_dir) , 6)
+  C_meridional_V = round( -x$vento_vel * cosd(x$vento_dir) , 6)
+  
+  
+  # atan(1)*180/pi  #  atan(1) = 45° = 0.78539816 rad
+  #DVr = round( atan2 (   (sum(C_zonal_U))  , (sum(C_meridional_V))  )  *180/pi , 6 )
+  DVr1 = round( atan (sum(C_zonal_U) / sum(C_meridional_V))  , 6 ) 
+  DVr2 = round( atan2 (sum(C_zonal_U) , sum(C_meridional_V)) , 6 ) 
+  
+  #  https://www.tandfonline.com/doi/pdf/10.1080/10473289.2003.10466276?needAccess=true
+  # sin (1.57079633 rad) = 1
+  # max(DVrAux)  = 1.537659
+  IDV1 = round (1 + sin(DVr1-(-0.03313127))   , 6)
+  IDV2 = round (1 + sin(DVr2-(-0.03313127))   , 6)
+  
+  test <- rbind(test, 
+                list(DVr1, IDV1, DVr2, IDV2), 
+                deparse.level = 1)
+  
+  #
+  # ao utilizar a funcao atan eh encontrado o problema de descontinuidade 
+  # nos intervalos de [0° - 90°, 180° - 270°] quando eh utilizada a funcao
+  # atan2, o proprio software já corrige o problema de descontinuidade 
+  # dividindo os termos por -pi
+  #
+  # a funcao atan encontra um problema com DVr < 0, mostrando os angulos 
+  # complementares (quadrantes opostos) a funcao atan2 não apresenta
+  #  esse problema, e os valores estão nos quadrantes corretos
+  # 
+  # https://en.wikipedia.org/wiki/Atan2
+  # 
   
   
   
@@ -142,26 +185,25 @@ for(i in 1:length(names)){
   RbAux <- c(RbAux, Rb)
   
   # theta = inclinacao dos modulos [ em ° ]
-  theta = (15*pi)/180
+  theta = 15
 
-  
   ### Modelo 01 - On temporal modelling (...) in seven cities
   # Vd = velocidade de deposicao 
-  Vd1 = 1/(Ra+Rb) + Vs*cos(theta)
+  Vd1 = 1/(Ra+Rb) + Vs*cosd(theta)
   
   Pd = round( Vd1 * ListaConcentracaoMedia[i] * 10^(-6) * i , 6) #MediaConcentracao
-  Nloss = round ( 0.015 * Pd , 6)
+  Nloss = 0.015 * Pd
 
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
   # t unidade de tempo em segundos
   t_sec = 86400*i
-  Vd2 = round ( 1/(Ra+Rb) + Vs , 6)
+  Vd2 =  1/(Ra+Rb) + Vs 
   
   VdAux <- c(VdAux, Vd2)
   
-  m = round(Vd2 * ListaMassaMedia[i] * 10^(-6) * cos(theta) * t_sec, 6) # MediaMassa
-  x_gauss = round ( 0.17*m^(0.8473) , 6 )
-  SR = round ( 1 - 34.37*erf(x_gauss) , 6 ) 
+  m = Vd2 * ListaMassaMedia[i] * 10^(-6) * cosd(theta) * t_sec # MediaMassa
+  x_gauss = 0.17*m^(0.8473)
+  SR = 1 - 34.37*erf(x_gauss)
   
   
   m
@@ -171,6 +213,7 @@ for(i in 1:length(names)){
   Pd
   Nloss
   
+
   
   df <- rbind(df, list(x$dia_mes_ano[1], Vd1, Pd, Nloss, 
                                          Vd2, m, x_gauss, SR), deparse.level = 1)
@@ -178,5 +221,8 @@ for(i in 1:length(names)){
 
 }
 
+test <- test[-c(1),]
+write_csv(test,'D:\\github\\Tabelas_DynamoDB\\wind_test.csv')
+
 df <- df[-c(1),]
-write_csv(df,'D:\\github\\Tabelas_DynamoDB\\teste.csv')
+write_csv(df,'D:\\github\\Tabelas_DynamoDB\\m_accumalation.csv')
