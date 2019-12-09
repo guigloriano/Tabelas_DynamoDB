@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-let date = "20191121"
-=======
-let date = "20191118"
->>>>>>> 31240d4048c0149bbbfd1bfa03a295a2b2335166
+let date = "20191208"
 
 const AWSConfig = require('./config')
 const fs = require('fs')

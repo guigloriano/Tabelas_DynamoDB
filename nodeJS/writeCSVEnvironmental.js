@@ -1,4 +1,4 @@
-let date = "20191127"
+let date = "20191208"
 
 const AWSConfig = require('./config')
 const fs = require('fs')
