@@ -32,6 +32,12 @@ for(i in 1:length(filesInv)){
   # calculo da potencia dc
   z_merge$P_DC = z_merge$I_DC * z_merge$V_DC
   
+  dia <- z_merge$dia_mes_ano[1]
+  
+  pathDest <- "D:/github/teste_lm/merge/"
+  fileDest <- paste(pathDest,  "lm_", dia, ".csv", sep = "")
+  write_csv(z_merge, fileDest)
+  
 ## decomposicao da direcao do vento em coordenadas
 #  C_zonal_U      = round( -z_merge$vento_vel * sind(z_merge$vento_dir) , 6)
 #  C_meridional_V = round( -z_merge$vento_vel * cosd(z_merge$vento_dir) , 6)
@@ -79,14 +85,34 @@ for(i in 1:length(filesInv)){
   y$m <- NULL
   y$n <- NULL
   
-  dia <- z_merge$dia_mes_ano[1]
   
-  pathDest <- "D:/github/teste_lm/"
-  fileDest <- paste(pathDest,  "teste_lm_", dia, ".csv", sep = "")
-  salvarArq_name <- paste(pathDest, "teste1_", dia, ".csv", sep = "")
   
-  write_csv(z_merge, fileDest)
+  pathDest <- "D:/github/teste_lm/group/"
+  salvarArq_name <- paste(pathDest, "lm_group_", dia, ".csv", sep = "")
   write_csv(y, salvarArq_name)
   
 }
 
+#m <- lm(eq, data = treinamento)
+#onde eq é y ~ avg_radsol_I + temp_ar_avg
+#y é a variável resposta
+#e depois do '~'
+#são as variáveis explicativas
+
+csvPath <- setwd("D:/github/teste_lm/group/")
+names <- list.files(pattern = "*.csv")
+#View(csvFile)
+
+for(i in 1:length(names)){ 
+  i = 1
+  assign(names[i],read.csv(names[i],skip=1, header=TRUE))
+  
+  dataset <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
+  
+  multi.fit = lm(P_AC ~ irr_est + temp, dataset)
+  
+  summary(multi.fit)
+  
+  qqline(multi.fit)
+
+}

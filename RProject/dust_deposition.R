@@ -1,14 +1,8 @@
-
-
 #    https://www.wxforum.net/index.php?PHPSESSID=9e6242ddde79abbe07549332715a0555&
 #    http://colaweb.gmu.edu/dev/clim301/lectures/wind/wind-uv
 #    http://mmc2.geofisica.unam.mx/cursos/geoest/Articulos/Geostatistics/Non-Linear%20Surface%20Interpolations.htm
 #    https://www.researchgate.net/post/How_to_interpolate_wind_direction_in_GIS_using_transformation
 #
-#
-#
-
-
 
 #install.packages("pracma")
 #install.packages("data.table")              # Install data.table package
