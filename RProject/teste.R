@@ -112,7 +112,6 @@ for(i in 1:length(names)){
   multi.fit = lm(P_AC ~ irr_est + temp, dataset)
   
   summary(multi.fit)
-  
-  qqline(multi.fit)
+
 
 }
