@@ -1,5 +1,6 @@
 library(dplyr)
 library(readr)
+library(stringr)
 #arqDia <- 20191003
 #csvPath <- "D:\\github\\Tabelas_DynamoDB\\inversor_diario_min\\inversor_1_ufms-"
 #csvFile <- paste(csvPath, arqDia, ".csv", sep = "")
