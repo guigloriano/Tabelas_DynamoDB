@@ -38,7 +38,7 @@ VdAux <- 0
 
 
 for(i in 1:length(names)){ 
-  #  i = 4
+    i = 4
   assign(names[i],read.csv(names[i],skip=1, header=TRUE))
   x <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
   

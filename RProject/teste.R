@@ -32,12 +32,6 @@ for(i in 1:length(filesInv)){
   # calculo da potencia dc
   z_merge$P_DC = z_merge$I_DC * z_merge$V_DC
   
-  dia <- z_merge$dia_mes_ano[1]
-  
-  pathDest <- "D:/github/teste_lm/merge/"
-  fileDest <- paste(pathDest,  "lm_", dia, ".csv", sep = "")
-  write_csv(z_merge, fileDest)
-  
 ## decomposicao da direcao do vento em coordenadas
 #  C_zonal_U      = round( -z_merge$vento_vel * sind(z_merge$vento_dir) , 6)
 #  C_meridional_V = round( -z_merge$vento_vel * cosd(z_merge$vento_dir) , 6)
@@ -46,6 +40,11 @@ for(i in 1:length(filesInv)){
 #  DVr1 = round( atan (sum(C_zonal_U) / sum(C_meridional_V))  , 6) 
 #  IDV1 = round (1 + sin(DVr1-(-0.03313127))   , 6)
 
+  dia <- z_merge$dia_mes_ano[1]
+  
+  pathDest <- "D:/github/teste_lm/merge/"
+  fileDest <- paste(pathDest,  "teste_lm_", dia, ".csv", sep = "")
+  write_csv(z_merge, fileDest)
   
   g <- dplyr::group_by(z_merge, dia_mes_ano, h = substr(hora_minuto, 1, 2), 
                        m = floor(as.numeric(substr(hora_minuto, 3, 4))/60))
@@ -85,33 +84,43 @@ for(i in 1:length(filesInv)){
   y$m <- NULL
   y$n <- NULL
   
-  
-  
-  pathDest <- "D:/github/teste_lm/group/"
-  salvarArq_name <- paste(pathDest, "lm_group_", dia, ".csv", sep = "")
+  pathDest2 <- "D:/github/teste_lm/group/"  
+  salvarArq_name <- paste(pathDest2, "teste1_", dia, ".csv", sep = "")
   write_csv(y, salvarArq_name)
   
 }
 
-#m <- lm(eq, data = treinamento)
-#onde eq é y ~ avg_radsol_I + temp_ar_avg
-#y é a variável resposta
-#e depois do '~'
-#são as variáveis explicativas
+pathRegLin <- setwd("D:/github/teste_lm/group/" )
+pathRegLin <- setwd("D:/github/teste_lm/group/" )
+nameRegLin <- list.files(pattern = "*.csv")
+filesRegLin <- paste(pathRegLin,  "/", nameRegLin, sep = "")
+
 
 csvPath <- setwd("D:/github/teste_lm/group/")
 names <- list.files(pattern = "*.csv")
-#View(csvFile)
 
-for(i in 1:length(names)){ 
-  i = 1
+#for(i in 1:length(filesRegLin)){ 
+for(i in 1:5){   
+  
+  i = 4
   assign(names[i],read.csv(names[i],skip=1, header=TRUE))
+  x <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
   
-  dataset <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))
+
+  dfRegLin <- x
+  reg_linear <- lm(formula = x$P_AC ~ x$irr_est + x$temp + x$numPM1 +x$massaPM1 + x$numPM2 + x$massaPM2, data = x)
   
-  multi.fit = lm(P_AC ~ irr_est + temp, dataset)
+  save (reg_linear, "Teste.RData");
   
+<<<<<<< HEAD
   summary(multi.fit)
 
 
+=======
+  summary(reg_linear)
+  df.coef <- as.data.frame( coef(summary(reg_linear)) )
+  
+  teste2.data.frame <- summary(reg_linear)$coefficients
+>>>>>>> refs/remotes/origin/dev
 }
+
