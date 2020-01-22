@@ -45,6 +45,10 @@ for(i in 1:length(filesMerge)){
   y$m <- NULL
   y$n <- NULL
   
+  # remove os NA e os -Inf dos datasets forcando eles a 0
+  is.na(y)<-sapply(y, is.infinite)
+  y[is.na(y)] <- 0
+  
   salvarArq_name <- paste(pathGroup, "tabela_por_hora", x$dia_mes_ano[1], ".csv", sep = "")
   write_csv(y, salvarArq_name)
   

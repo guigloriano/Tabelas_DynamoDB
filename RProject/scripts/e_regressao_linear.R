@@ -3,12 +3,17 @@ aux_dia <- NULL
 df <- NULL 
 RL_final <- data.frame()
 
-for(i in 1:length(names)){   
-  
- # i = 2
+
+j = 1
+k = 1
+
+
+#for(i in 1:length(names)){   
+for(i in j:k){     
+ # i = 1
   
   # leitura do dataset com o nome na i-nesima posicao da pasta
-  dataReg <- readr::read_csv(names[i], col_types = cols(hora_minuto = col_character()))   
+  dataReg <- readr::read_csv(nameRegLin[i], col_types = cols(hora_minuto = col_character()))   
   
   # aux para pegar o dia do dataset
   aux_dia[i] <- dataReg$dia_mes_ano[1]
@@ -26,9 +31,17 @@ for(i in 1:length(names)){
   #------------------------------------------------------------------------------------
   
   # definicao do modelo e calculo da regressao linear usando suas variaveis
-  modelo <- df$P_AC ~ df$irr_est + df$temp + df$numPM1 + df$massaPM1 + df$numPM2 + df$massaPM2
-  reg_linear <- lm(modelo, data = df)
-  # summary(reg_linear)
+  # variaveis disponiveis:
+  #         *P_AC             *massaPM1          massaPM4         tamanho_medio
+  #         *irr_est          *numPM1            numPM4          *vento_vel
+  #          irr_inv          *massaPM2          massaPM10       *vento_dir
+  #         *temp             *numPM2            numPM10         *rainfall
+  
+  # em todo script menciona a irr_est, mas estou testando com a irr_inv
+  modelo <- df$P_AC ~ df$irr_inv + df$temp + df$numPM1 + df$massaPM1 + df$numPM2 + df$massaPM2 +
+    df$vento_vel + df$vento_dir # + df$rainfall
+  reg_linear <- lm(modelo, data = df )  # , na.action=na.exclude
+  # summary(reg_linear) 
   
   #------------------------------------------------------------------------------------
   # coefficients(reg_linear)      # exibe os coeficientes encontrados pela Reg. Linear
@@ -59,6 +72,9 @@ for(i in 1:length(names)){
   CoefEst_massaPM1 <- stat.coef[5,1]
   CoefEst_numPM2 <- stat.coef[6,1]
   CoefEst_massaPM2 <- stat.coef[7,1] 
+  CoefEst_vento_vel <- stat.coef[8,1] 
+  CoefEst_vento_dir <- stat.coef[9,1] 
+  # CoefEst_rainfall <- stat.coef[10,1] 
   
   # divide os elementos do coeficiente da Erro Padrao (Std. Error)
   CoefStdError_Intercept <- stat.coef[1,2]
@@ -68,6 +84,8 @@ for(i in 1:length(names)){
   CoefStdError_massaPM1 <- stat.coef[5,2]
   CoefStdError_numPM2 <- stat.coef[6,2]
   CoefStdError_massaPM2 <- stat.coef[7,2] 
+  CoefStdError_vento_vel <- stat.coef[8,2]
+  CoefStdError_vento_dir <- stat.coef[9,2] 
   
   # divide os elementos do coeficiente dos p-Values
   CoefPValue_Intercept <- stat.coef[1,4]
@@ -77,6 +95,8 @@ for(i in 1:length(names)){
   CoefPValue_massaPM1 <- stat.coef[5,4]
   CoefPValue_numPM2 <- stat.coef[6,4]
   CoefPValue_massaPM2 <- stat.coef[7,4]
+  CoefPValue_vento_vel <- stat.coef[6,4]
+  CoefPValue_vento_dir <- stat.coef[7,4]
   
   
   if (FALSE){
@@ -87,15 +107,15 @@ for(i in 1:length(names)){
   }
   
   # elementos do rodapé do summary(reg_linear)
-  summary(reg_linear)$r.squared           # Multiple R-squared
-  summary(reg_linear)$adj.r.squared       # Adjusted R-squared:
-  summary(reg_linear)$df[2]               # degrees of freedom
-  summary(reg_linear)$sigma               # Residual standard error:
+  R2 <- summary(reg_linear)$r.squared           # Multiple R-squared
+  R2_ajust <- summary(reg_linear)$adj.r.squared       # Adjusted R-squared:
+  Graus_Lib <- summary(reg_linear)$df[2]               # degrees of freedom
+  Err_res_pad <- summary(reg_linear)$sigma               # Residual standard error:
 
   #------------------------------------------------------------------------------------
   
   RL_atual <- data.frame(Dia = c(aux_dia[i]), 
-                         RL_Res_Min = c(ResMin), 
+                         RL_Res_Min = c(Res_Min), 
                          RL_Res_1Q = c(Res_1Q),
                          RL_Res_Mdn = c(Res_Mdn),
                          RL_Res_3Q = c(Res_3Q),
@@ -123,7 +143,13 @@ for(i in 1:length(names)){
                          CoefPValue_numPM1 = c(CoefPValue_numPM1),
                          CoefPValue_massaPM1 = c(CoefPValue_massaPM1),
                          CoefPValue_numPM2 = c(CoefPValue_numPM2),
-                         CoefPValue_massaPM2 = c(CoefPValue_massaPM2)
+                         CoefPValue_massaPM2 = c(CoefPValue_massaPM2),
+                         
+                         
+                         R2 = c(R2),       
+                         R2_ajust = c(R2_ajust),     
+                         Graus_Lib = c(Graus_Lib),             
+                         Err_res_pad = c(Err_res_pad)              
                          
                          )
   
@@ -142,8 +168,20 @@ for(i in 1:length(names)){
   #write.csv(glance(reg_linear), "an.csv")      # glance() for the table.
   #------------------------------------------------------------------------------------
   
-  #  z <- cor.test(df$temp, df$irr_inv)
+  df_cor <- data.frame(df)
+  df_cor$massaPM4 <- NULL
+  df_cor$numPM4 <- NULL
+  df_cor$massaPM10 <- NULL
+  df_cor$numPM10 <- NULL
+  
+  z <- data.frame(cor(df_cor[, 3:18]))
+  z1 <- cor(df_cor[, 3:4])
   #  z <- cor(df$temp, df$irr_inv)
   
   
 }
+
+salvarArq_name <- paste(reglinear_caminho, "reg_linear(", j, "-", k, ")_", aux_dia[j], "_", aux_dia[k], ".csv", sep = "")
+salvarArq_name2 <- paste(reglinear_caminho, "corr(", j, "-", k, ")_", aux_dia[j], "_", aux_dia[k], ".csv", sep = "")
+write_csv(RL_final, salvarArq_name)
+write_csv(z, salvarArq_name2)
