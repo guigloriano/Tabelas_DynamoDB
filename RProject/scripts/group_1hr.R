@@ -1,7 +1,5 @@
 
-
-
-
+#View(filesMerge)
 
 for(i in 1:length(filesMerge)){ 
   
@@ -47,7 +45,7 @@ for(i in 1:length(filesMerge)){
   y$m <- NULL
   y$n <- NULL
   
-  salvarArq_name <- paste(pathGroup, "tabela_por_hora", dia, ".csv", sep = "")
+  salvarArq_name <- paste(pathGroup, "tabela_por_hora", x$dia_mes_ano[1], ".csv", sep = "")
   write_csv(y, salvarArq_name)
   
 }

@@ -1,8 +1,6 @@
 # este codigo combina as tabelas do Inversor e Estacao 
 # de minuto em minuto em um único arquivo
 
-
-
 for(i in 1:length(filesInv)){ 
   #  i = 1
   dfestacao <- filesSta[i]
