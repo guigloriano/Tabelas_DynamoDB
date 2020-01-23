@@ -21,17 +21,17 @@ auxMassaMedia <- 0
 auxConcentracao <- 0
 auxConcentracaMedia <- 0
 
-UAux <- 0
-RaAux <- 0
-RbAux <- 0
-VsAux <- 0
-VdAux <- 0
+UAux <- NULL
+RaAux <- NULL
+RbAux <- NULL
+VsAux <- NULL
+VdAux <- NULL
 
 
 
-for(i in 1:length(names)){ 
+for(i in 1:length(nameDustDep)){ 
   
-  i = 1
+  # i = 1
   #assign(nameDustDep[i],read.csv(nameDustDep[i],skip=1, header=TRUE))
   
   x <- readr::read_csv(nameDustDep[i], col_types = cols(hora_minuto = col_character()))
@@ -48,13 +48,13 @@ for(i in 1:length(names)){
   # atan(1)*180/pi  #  atan(1) = 45° = 0.78539816 rad
   #DVr = round( atan2 (   (sum(C_zonal_U))  , (sum(C_meridional_V))  )  *180/pi , 6 )
   DVr1 = round( atan (sum(C_zonal_U) / sum(C_meridional_V))  , 6 ) 
-#  DVr2 = round( atan2 (sum(C_zonal_U) , sum(C_meridional_V)) , 6 ) 
+  DVr2 = round( atan2 (sum(C_zonal_U) , sum(C_meridional_V)) , 6 ) 
   
   #  https://www.tandfonline.com/doi/pdf/10.1080/10473289.2003.10466276?needAccess=true
   # sin (1.57079633 rad) = 1
   # max(DVrAux)  = 1.537659
   IDV1 = round (1 + sin(DVr1-(-0.03313127))   , 6)
-#  IDV2 = round (1 + sin(DVr2-(-0.03313127))   , 6)
+  IDV2 = round (1 + sin(DVr2-(-0.03313127))   , 6)
   
   test <- rbind(test, 
                 list(DVr1, IDV1, DVr2, IDV2), 
@@ -212,7 +212,7 @@ for(i in 1:length(names)){
 }
 
 test <- test[-c(1),]
-write_csv(test,'D:\\github\\Tabelas_DynamoDB\\wind_test.csv')
+write_csv(test,'D:\\github\\Tabelas_DynamoDB\\csv\\teste_lm\\dust_deposition\\wind_test-ORI.csv')
 
 df <- df[-c(1),]
-write_csv(df,'D:\\github\\Tabelas_DynamoDB\\m_accumalation.csv')
+write_csv(df,'D:\\github\\Tabelas_DynamoDB\\csv\\teste_lm\\dust_deposition\\m_accumalation-ORI.csv')
