@@ -1,0 +1,48 @@
+Exportar tabelas DynamoDB:
+
+
+1) Instalar AWS CLI:
+https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-welcome.html
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+2) Configurar AWS CLI:
+
+https://docs.aws.amazon.com/pt_br/cli/latest/userguide/cli-chap-configure.html
+
+
+aws configure --profile produser
+AWS Access Key ID [None]: AKIAJ7RW7CV4K2YII3WA
+AWS Secret Access Key [None]: 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
+Default region name [None]: us-east-1
+Default output format [None]: json
+
+
+AWSAccessKeyId=AKIAJ7RW7CV4K2YII3WA
+AWSSecretKey=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
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+3) Exportar as tabelas com os comandos:
+
+# Install export-dynamodb
+$ pip install export-dynamodb
+
+# List of all export-dynamodb cli options.
+$ export-dynamodb --help
+
+# Export table and write to TABLE_NAME.csv file
+$ export-dynamodb -t TABLE_NAME -f csv
+$ export-dynamodb -t ambientais_ufms -f csv
+$ export-dynamodb -t inversor_1_ufms -f csv
+
+# Export table and write to output.csv file
+$ export-dynamodb -t TABLE_NAME -f csv -o output.csv
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+4) Remover as linhas em branco com o código em python:
+
+import pandas as pd
+df = pd.read_csv('input.csv')
+df.to_csv('output.csv', index=False)
