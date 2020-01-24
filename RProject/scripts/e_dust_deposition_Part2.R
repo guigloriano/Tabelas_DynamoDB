@@ -1,4 +1,11 @@
 
+UAux <- NULL
+RaAux <- NULL
+RbAux <- NULL
+VsAux <- NULL
+VdAux <- NULL
+
+
 # Ra = resistencia aerodinamica
 # Cds = coeficiente de arrasto da superfície [ 1.2 * 10^(-2) ]
 # U = velocidade media do vento (m/s)

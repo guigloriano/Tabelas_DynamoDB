@@ -11,11 +11,6 @@ dataset_DustDep <- setNames(data.frame(matrix(ncol = 8, nrow = 1)),
 aux_DirVento <- setNames(data.frame(matrix(ncol = 4, nrow = 1)),
                  c("DVr1", "IDV1", "DVr2" , "IDV2"))
 
-UAux <- NULL
-RaAux <- NULL
-RbAux <- NULL
-VsAux <- NULL
-VdAux <- NULL
 
 ListaVento <- NULL
 ListaVentoMedia <- NULL
