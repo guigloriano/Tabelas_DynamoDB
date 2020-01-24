@@ -1,4 +1,4 @@
-let date = "20200117"
+let date = "20200124"
 
 const AWSConfig = require('./config')
 const fs = require('fs')
@@ -252,7 +252,7 @@ readForOneDay(date)
 				response.rainfall[i]
 			])
 
-			console.log("inserindo: " + response.monthDay + " " + response.interval[i] + " rainfall: " + response.rainfall[i])
+			console.log("inserindo: " + response.monthDay + " " + response.interval[i] + " irradiacao: " + response.irradiation[i])
 		}
 		
 		csv.write(arrayToWrite, {headers: true}).pipe(ws)

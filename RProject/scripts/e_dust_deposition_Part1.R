@@ -19,10 +19,13 @@ ListaMassaMedia <- NULL
 ListaConcentracao <- NULL
 ListaConcentracaoMedia <- NULL
 
-
 #i = 1
 
-for(i in 1:length(nameDustDep)){ 
+j = 1
+k = 10
+
+# for(i in 1:length(nameDustDep)){ 
+for(i in j:k){ 
 
   # assign(nameDustDep[i],read.csv(nameDustDep[i],skip=1, header=TRUE))
   x <- readr::read_csv(nameDustDep[i], col_types = cols(hora_minuto = col_character()))
@@ -101,7 +104,10 @@ for(i in 1:length(nameDustDep)){
 
 # salva o dataset auxiliar de coordenada de dir/vel do vento
 aux_DirVento <- aux_DirVento[-c(1),]
-write_csv(aux_DirVento,'D:\\github\\Tabelas_DynamoDB\\csv\\teste_lm\\dust_deposition\\wind_test-MOD.csv')
+salvarArq_name <- paste(reglinear_caminho, "wind_test-MOD(", j, "-", k, ")_", aux_dia[j], "_", aux_dia[k], ".csv", sep = "")
+write_csv(aux_DirVento, salvarArq_name)
+
+
 
 # salva o dataset correspondente ao acumulo de massa
 dataset_DustDep <- dataset_DustDep[-c(1),]
@@ -109,6 +115,17 @@ write_csv(dataset_DustDep,'D:\\github\\Tabelas_DynamoDB\\csv\\teste_lm\\dust_dep
 
 
 
+# salva o dataset auxiliar de coordenada de dir/vel do vento
+aux_DirVento <- aux_DirVento[-c(1),]
+salvarArq_name <- paste("D:\\github\\Tabelas_DynamoDB\\csv\\teste_lm\\dust_deposition\\m_accumalation-MOD", "wind_test-MOD(", j, "-", k, ")_", aux_dia[j], "_", aux_dia[k], ".csv", sep = "")
+write_csv(aux_DirVento, salvarArq_name)
+
+
+
+# salva o dataset correspondente ao acumulo de massa
+dataset_DustDep <- dataset_DustDep[-c(1),]
+salvarArq_name2 <- paste("reglinear_caminho", "m_accumalation-MOD(", j, "-", k, ")_", aux_dia[j], "_", aux_dia[k], ".csv", sep = "")
+write_csv(dataset_DustDep, salvarArq_name2)
 
 
 

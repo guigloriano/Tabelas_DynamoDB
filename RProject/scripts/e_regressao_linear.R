@@ -5,7 +5,7 @@ RL_final <- data.frame()
 
 
 j = 1
-k = 1
+k = length(nameRegLin)
 
 
 #for(i in 1:length(names)){   
