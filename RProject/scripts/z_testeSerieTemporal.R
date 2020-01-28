@@ -2,13 +2,13 @@
 
 
   dataset_teste <- datasetDiv
-  aux_dia[i] <- dataset_teste$dia_mes_ano[1]
+  aux_dia[i] <- datasetDiv$dia_mes_ano[1]
   
   # Temperatura media em °C
-  Temp_Media = round(mean(dataset_teste$temp), digits = 5)
+  Temp_Media = round(mean(dataset_teste$temp, na.rm = TRUE), digits = 5)
   
   # calcula a vel. do vento media atual e monta uma lista delas
-  Vel_Med_Vento = round(mean(dataset_teste$vento_vel), digits = 5)
+  Vel_Med_Vento = round(mean(dataset_teste$vento_vel, na.rm = TRUE), digits = 5)
   ListaVento <- c(ListaVento, Vel_Med_Vento)
   
   # calcula a media das velocidades medias e monta uma lista
@@ -19,7 +19,7 @@
   ConcentracaoParticulados = round(mean(dataset_teste$numPM1) + mean(dataset_teste$numPM2), digits = 8)
   ListaConcentracao <- c(ListaConcentracao, ConcentracaoParticulados)
   
-  ConcentracaoMediaParticulados <- mean(ListaConcentracao)
+  ConcentracaoMediaParticulados = mean(ListaConcentracao)
   ListaConcentracaoMedia <- c(ListaConcentracaoMedia, ConcentracaoMediaParticulados)
   
   # calcula a media da massa dos particulados e monta uma lista 
@@ -34,7 +34,7 @@
   # Cds = coeficiente de arrasto da superfície [ 1.2 * 10^(-2) ]
   # U = velocidade media do vento (m/s)
   Cds = 1.2*10^(-2) # 0.012
-  U_velMed_ar = ListaVentoMedia[i] / 3.6
+  U_velMed_ar = ListaVentoMedia[length(ListaVentoMedia)] / 3.6
   UAux <- c(UAux, U_velMed_ar)
 
   Ra = 1/(Cds * U_velMed_ar)
@@ -88,7 +88,7 @@
   ### Modelo 01 - On temporal modelling (...) in seven cities
   # Vd = velocidade de deposicao 
   Vd1 = 1/(Ra+Rb) + Vs_velSed*cosd(theta)
-  Pd = round( Vd1 * ListaConcentracaoMedia[i] * 10^(-6) * i , 8) #MediaConcentracao
+  Pd = round( Vd1 * ListaConcentracaoMedia[length(ListaConcentracaoMedia)] * 10^(-6) * i , 8) #MediaConcentracao
   Nloss = 0.015 * Pd
   
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
@@ -102,7 +102,7 @@
   SR = 1 - 34.37*erf(x_gauss)
   
   # criacao do dataset para calculo do impacto da sujidade
-  dataset_aux <- rbind(dataset_aux, list(dataset_teste$dia_mes_ano[1], dataset_teste$hora_minuto[length(dataset_teste$hora_minuto)], 
+  dataset_aux <- rbind(dataset_aux, list(dataset_teste$dia_mes_ano[1], hora_final, 
                                          Vd1, Pd, Nloss, Vd2, m, x_gauss, SR), deparse.level = 1)
 
 #}
