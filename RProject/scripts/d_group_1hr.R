@@ -1,13 +1,15 @@
 
 #View(filesMerge)
 
+fi = 0 
+
 for(i in 1:length(filesMerge)){ 
   
-  arquivos <- filesMerge[i]
+ # i = 1 
   
-  x <- readr::read_csv(arquivos, col_types = cols(hora_minuto = col_character()))
+  mergeDataset <- readr::read_csv(filesMerge[i], col_types = cols(hora_minuto = col_character()))
   
-  g <- dplyr::group_by(x, dia_mes_ano, h = substr(hora_minuto, 1, 2), 
+  g <- dplyr::group_by(mergeDataset, dia_mes_ano, h = substr(hora_minuto, 1, 2), 
                        m = floor(as.numeric(substr(hora_minuto, 3, 4))/60))
   
   gg <- dplyr::summarise(g, hora_minuto = dplyr::first(hora_minuto), 
@@ -38,6 +40,11 @@ for(i in 1:length(filesMerge)){
                          vento_dir=round(mean(vento_dir, na.rm=TRUE), digits = 2), 
                          rainfall = max(rainfall, na.rm=TRUE),
                          
+                         DVr1 =  round(atan  (sum( -vento_vel * sind(vento_dir) ) / sum( -vento_vel * cosd(vento_dir) ) ), digits = 6),
+                         DVr2 =  round(atan2 (sum( -vento_vel * sind(vento_dir) ) , sum( -vento_vel * cosd(vento_dir) ) ), digits = 6),
+                         IDV1 =  round(1 + sin(atan  (sum( -vento_vel * sind(vento_dir) ) / sum( -vento_vel * cosd(vento_dir) ) ) - fi ), digits = 6),#-(-0.03313127))   )
+                         IDV2 =  round(1 + sin(atan2 (sum( -vento_vel * sind(vento_dir) ) , sum( -vento_vel * cosd(vento_dir) ) ) - fi ), digits = 6),
+                         
                          n = dplyr::n())
   
   y <- gg
@@ -49,7 +56,7 @@ for(i in 1:length(filesMerge)){
   is.na(y)<-sapply(y, is.infinite)
   y[is.na(y)] <- 0
   
-  salvarArq_name <- paste(pathGroup, "tabela_por_hora", x$dia_mes_ano[1], ".csv", sep = "")
+  salvarArq_name <- paste(pathGroup, "tabela_por_hora", mergeDataset$dia_mes_ano[1], ".csv", sep = "")
   write_csv(y, salvarArq_name)
   
 }

@@ -10,16 +10,16 @@ k = length(nameRegLin)
 
 #for(i in 1:length(names)){   
 for(i in j:k){     
- # i = 1
+ # 
+  #i = 1
   
   # leitura do dataset com o nome na i-nesima posicao da pasta
-  dataReg <- readr::read_csv(nameRegLin[i], col_types = cols(hora_minuto = col_character()))   
-  
+  dataRegLin <- readr::read_csv(nameRegLin[i], col_types = cols(hora_minuto = col_character()))   
   # aux para pegar o dia do dataset
-  aux_dia[i] <- dataReg$dia_mes_ano[1]
+  aux_dia[i] <- dataRegLin$dia_mes_ano[1]
   
   # df para acumular os datasets lidos em um unico arquivo
-  df <- rbind(df, dataReg)
+  df <- rbind(df, dataRegLin)
   # View(df)
   
   #------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ for(i in j:k){
   
   # em todo script menciona a irr_est, mas estou testando com a irr_inv
   modelo <- df$P_AC ~ df$irr_inv + df$temp + df$numPM1 + df$massaPM1 + df$numPM2 + df$massaPM2 +
-    df$vento_vel + df$vento_dir # + df$rainfall
+    df$vento_vel + df$vento_dir + df$DVr1 + df$DVr2 + df$IDV1 + df$IDV2 # + df$rainfall
   reg_linear <- lm(modelo, data = df )  # , na.action=na.exclude
   # summary(reg_linear) 
   
@@ -48,53 +48,53 @@ for(i in j:k){
   # residuals(reg_linear)         # exibe os residuais encontrados pela Reg. Linear
   
    # Calcula os residuais individuaalmente
-   Res_Min <- min(residuals(reg_linear))                # minimo
-   Res_1Q <- quantile(residuals(reg_linear), 0.25)     # 1o. Quantil
-   Res_Mdn <- median(residuals(reg_linear))             # mediana
-   Res_3Q <- quantile(residuals(reg_linear), 0.75)     # 3o. Quantil
-   Res_Max <- max(residuals(reg_linear))                # maximo
+  Res_Min <- min(residuals(reg_linear))                # minimo
+  Res_1Q  <- quantile(residuals(reg_linear), 0.25)     # 1o. Quantil
+  Res_Mdn <- median(residuals(reg_linear))             # mediana
+  Res_3Q  <- quantile(residuals(reg_linear), 0.75)     # 3o. Quantil
+  Res_Max <- max(residuals(reg_linear))                # maximo
   
   # Calcula os residuais (min, 1Q, MEDIAN, 3Q, max) de uma vez
   # quantile(residuals(reg_linear), probs= c(0, 0.25, 0.5, 0.75, 1))
   
   # Separa os coeficientes por termos (Estimado, Std. Error, t value, p-value)
   stat.coef  <- summary(reg_linear)$coefficients
-  coef    <- stat.coef[,1]    # 1st column: coefficients (same as above)
-  se.coef <- stat.coef[,2]    # 2nd column: se for each coef
-  t.coef  <- stat.coef[,3]    # 3rd column: t-value for each coef
-  p.coef  <- stat.coef[,4]    # 4th column: p-value for each coefficient
+  coef       <- stat.coef[,1]    # 1st column: coefficients (same as above)
+  se.coef    <- stat.coef[,2]    # 2nd column: se for each coef
+  t.coef     <- stat.coef[,3]    # 3rd column: t-value for each coef
+  p.coef     <- stat.coef[,4]    # 4th column: p-value for each coefficient
   
   # divide os elementos do coeficiente da Estimativa
   CoefEst_Intercept <- stat.coef[1,1]
-  CoefEst_irr_est <- stat.coef[2,1]
-  CoefEst_temp <- stat.coef[3,1]
-  CoefEst_numPM1 <- stat.coef[4,1]
-  CoefEst_massaPM1 <- stat.coef[5,1]
-  CoefEst_numPM2 <- stat.coef[6,1]
-  CoefEst_massaPM2 <- stat.coef[7,1] 
+  CoefEst_irr_est   <- stat.coef[2,1]
+  CoefEst_temp      <- stat.coef[3,1]
+  CoefEst_numPM1    <- stat.coef[4,1]
+  CoefEst_massaPM1  <- stat.coef[5,1]
+  CoefEst_numPM2    <- stat.coef[6,1]
+  CoefEst_massaPM2  <- stat.coef[7,1] 
   CoefEst_vento_vel <- stat.coef[8,1] 
   CoefEst_vento_dir <- stat.coef[9,1] 
   # CoefEst_rainfall <- stat.coef[10,1] 
   
   # divide os elementos do coeficiente da Erro Padrao (Std. Error)
   CoefStdError_Intercept <- stat.coef[1,2]
-  CoefStdError_irr_est <- stat.coef[2,2]
-  CoefStdError_temp <- stat.coef[3,2]
-  CoefStdError_numPM1 <- stat.coef[4,2]
-  CoefStdError_massaPM1 <- stat.coef[5,2]
-  CoefStdError_numPM2 <- stat.coef[6,2]
-  CoefStdError_massaPM2 <- stat.coef[7,2] 
+  CoefStdError_irr_est   <- stat.coef[2,2]
+  CoefStdError_temp      <- stat.coef[3,2]
+  CoefStdError_numPM1    <- stat.coef[4,2]
+  CoefStdError_massaPM1  <- stat.coef[5,2]
+  CoefStdError_numPM2    <- stat.coef[6,2]
+  CoefStdError_massaPM2  <- stat.coef[7,2] 
   CoefStdError_vento_vel <- stat.coef[8,2]
   CoefStdError_vento_dir <- stat.coef[9,2] 
   
   # divide os elementos do coeficiente dos p-Values
   CoefPValue_Intercept <- stat.coef[1,4]
-  CoefPValue_irr_est <- stat.coef[2,4]
-  CoefPValue_temp <- stat.coef[3,4]
-  CoefPValue_numPM1 <- stat.coef[4,4]
-  CoefPValue_massaPM1 <- stat.coef[5,4]
-  CoefPValue_numPM2 <- stat.coef[6,4]
-  CoefPValue_massaPM2 <- stat.coef[7,4]
+  CoefPValue_irr_est   <- stat.coef[2,4]
+  CoefPValue_temp      <- stat.coef[3,4]
+  CoefPValue_numPM1    <- stat.coef[4,4]
+  CoefPValue_massaPM1  <- stat.coef[5,4]
+  CoefPValue_numPM2    <- stat.coef[6,4]
+  CoefPValue_massaPM2  <- stat.coef[7,4]
   CoefPValue_vento_vel <- stat.coef[6,4]
   CoefPValue_vento_dir <- stat.coef[7,4]
   
