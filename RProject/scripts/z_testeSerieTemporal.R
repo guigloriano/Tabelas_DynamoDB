@@ -2,32 +2,34 @@
 
 
   dataset_teste <- datasetDiv
+  dataset_teste <- na.omit(dataset_teste)#aux_dia[i] <- datasetDiv$dia_mes_ano[1]
+  
   aux_dia[i] <- datasetDiv$dia_mes_ano[1]
   
   # Temperatura media em °C
-  Temp_Media = round(mean(dataset_teste$temp, na.rm = TRUE), digits = 5)
+  Temp_Media <- mean(dataset_teste$temp, na.rm=TRUE)
   
   # calcula a vel. do vento media atual e monta uma lista delas
-  Vel_Med_Vento = round(mean(dataset_teste$vento_vel, na.rm = TRUE), digits = 5)
+  Vel_Med_Vento <- mean(dataset_teste$vento_vel, na.rm=TRUE)
   ListaVento <- c(ListaVento, Vel_Med_Vento)
   
   # calcula a media das velocidades medias e monta uma lista
-  Media_Vel_Med_Vento = mean(ListaVento)
+  Media_Vel_Med_Vento <- mean(ListaVento, na.rm=TRUE)
   ListaVentoMedia <- c(ListaVentoMedia, Media_Vel_Med_Vento)
-  
-  
-  ConcentracaoParticulados = round(mean(dataset_teste$numPM1) + mean(dataset_teste$numPM2), digits = 8)
+
+  #ConcentracaoParticulados <- mean(dataset_teste$numPM1, na.rm=TRUE) + mean(dataset_teste$numPM2, na.rm=TRUE)
+  ConcentracaoParticulados <- mean(dataset_teste$numPM1, na.rm=TRUE) + mean(dataset_teste$numPM2, na.rm=TRUE)
   ListaConcentracao <- c(ListaConcentracao, ConcentracaoParticulados)
   
-  ConcentracaoMediaParticulados = mean(ListaConcentracao)
+  ConcentracaoMediaParticulados <- mean(ListaConcentracao, na.rm=TRUE)
   ListaConcentracaoMedia <- c(ListaConcentracaoMedia, ConcentracaoMediaParticulados)
   
   # calcula a media da massa dos particulados e monta uma lista 
-  Massa_Particulados = round(mean(dataset_teste$massaPM1) + mean(dataset_teste$massaPM2), digits = 8)
+  Massa_Particulados <- mean(dataset_teste$massaPM1, na.rm=TRUE) + mean(dataset_teste$massaPM2, na.rm=TRUE)
   ListaMassa <- c(ListaMassa, Massa_Particulados)
   
   # calcula a media da massa media dos particulados e monta uma lista
-  Media_Massa_Particulados <- mean(ListaMassa)
+  Media_Massa_Particulados <- mean(ListaMassa, na.rm=TRUE)
   ListaMassaMedia <- c(ListaMassaMedia, Media_Massa_Particulados)
 
   # Ra = resistencia aerodinamica
@@ -97,12 +99,12 @@
   Vd2 =  1/(Ra+Rb) + Vs_velSed 
   VdAux <- c(VdAux, Vd2)
   
-  m = Vd2 * ListaMassaMedia[i] * 10^(-6) * cosd(theta) * t_sec # MediaMassa
+  m = Vd2 * ListaMassaMedia[length(ListaMassaMedia)] * 10^(-6) * cosd(theta) * t_sec # MediaMassa
   x_gauss = 0.17*m^(0.8473)
   SR = 1 - 34.37*erf(x_gauss)
   
   # criacao do dataset para calculo do impacto da sujidade
-  dataset_aux <- rbind(dataset_aux, list(dataset_teste$dia_mes_ano[1], hora_final, 
+  dataset_aux <- rbind(dataset_aux, list(dataset_teste$dia_mes_ano[1], hora_inicial, 
                                          Vd1, Pd, Nloss, Vd2, m, x_gauss, SR), deparse.level = 1)
 
 #}

@@ -14,7 +14,9 @@ for(i in j:k){
   #i = 1
   
   # leitura do dataset com o nome na i-nesima posicao da pasta
-  dataRegLin <- readr::read_csv(nameRegLin[i], col_types = cols(hora_minuto = col_character()))   
+  #dataRegLin <- readr::read_csv(nameRegLin[i], col_types = cols(hora_minuto = col_character()))   
+  dataRegLin <- dataset_save
+  
   # aux para pegar o dia do dataset
   aux_dia[i] <- dataRegLin$dia_mes_ano[1]
   

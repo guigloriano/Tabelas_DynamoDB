@@ -56,6 +56,9 @@ for(i in 1:length(filesMerge)){
   is.na(y)<-sapply(y, is.infinite)
   y[is.na(y)] <- 0
   
+  if ( y$hora_minuto[1] == "000100")
+    y$hora_minuto[1] <- "000000"
+  
   salvarArq_name <- paste(pathGroup, "tabela_por_hora", mergeDataset$dia_mes_ano[1], ".csv", sep = "")
   write_csv(y, salvarArq_name)
   
