@@ -32,14 +32,15 @@ RbAux <- NULL
 VsAux <- NULL
 VdAux <- NULL
 
-j = 1
-k = 1
+temp_i = 1
+temp_j = 1
+temp_k = length(filesDiv)
 
 # namesDiv[15]
 # for (i in 1:length(namesDiv)){
-for (i in j:k){
+for (temp_i in temp_j:temp_k){
   
-  dataset_temp <- readr::read_csv(namesDiv[i], col_types = cols(hora_minuto = col_character()))
+  dataset_temp <- readr::read_csv(namesDiv[temp_i], col_types = cols(hora_minuto = col_character()))
   
   if (dataset_temp$hora_minuto[1] <= "010000"){
     hora_inicial <- "000000"
@@ -184,9 +185,7 @@ for (i in j:k){
     datasetDiv <- filter(dataset_temp, dataset_temp$hora_minuto <= "235959")
     source("D:\\github\\Tabelas_DynamoDB\\RProject\\scripts\\z_testeSerieTemporal.R")
   }
-  
-  
-  # dataset_save <- rbind(dataset_save, dataset_aux)
+
   
 }
 
@@ -214,10 +213,17 @@ for (aux_i in aux_j:aux_k){
   dataset_HORA_aux <- rbind(dataset_HORA_aux, dataset_HORA)
 }
 
-zy_merge <- merge.data.frame(x = dataset_HORA_aux, y = dataset_save, by='dia_mes_ano', by='hora_minuto', all.x = TRUE)
+zy_merge <- merge(x = dataset_HORA_aux, y = dataset_save, by=c("dia_mes_ano", "hora_minuto"), all = TRUE)
 
-#salvarArq_ate18h30 <- paste("D:\\github\\Tabelas_DynamoDB\\", "dataset_04-10_part1.csv", sep = "")
-#write_csv(ate18h30, salvarArq_ate18h30)
+salvarArq_name <- paste("D:\\teste", ".csv", sep = "")
+write_csv(zy_merge, salvarArq_name)
 
-#salvarArq_ate00h00 <- paste("D:\\github\\Tabelas_DynamoDB\\", "dataset_04-10_part2.csv", sep = "")
-#write_csv(ate00h00, salvarArq_ate00h00)
+zy_merge <- na.omit(zy_merge)
+#zy_merge[is.na(zy_merge)] <- 0
+modelo <- zy_merge$P_AC ~ zy_merge$irr_est + zy_merge$irr_inv + zy_merge$temp + zy_merge$numPM1 + zy_merge$massaPM1 + 
+  zy_merge$numPM2 + zy_merge$massaPM2 + zy_merge$vento_vel + zy_merge$vento_dir + zy_merge$DVr1 + zy_merge$DVr2 + 
+  zy_merge$IDV1 + zy_merge$IDV2 + zy_merge$Vd1 + zy_merge$Pd + zy_merge$Nloss + zy_merge$Vd2 + zy_merge$m + 
+  zy_merge$x_gauss + zy_merge$SR
+reg_linear <- lm(modelo, data = zy_merge, na.action=na.omit )  
+summary(reg_linear) 
+

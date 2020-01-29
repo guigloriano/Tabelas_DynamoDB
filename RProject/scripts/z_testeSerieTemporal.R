@@ -4,7 +4,7 @@
   dataset_teste <- datasetDiv
   dataset_teste <- na.omit(dataset_teste)#aux_dia[i] <- datasetDiv$dia_mes_ano[1]
   
-  aux_dia[i] <- datasetDiv$dia_mes_ano[1]
+  aux_dia[temp_i] <- datasetDiv$dia_mes_ano[1]
   
   # Temperatura media em °C
   Temp_Media <- mean(dataset_teste$temp, na.rm=TRUE)
@@ -107,5 +107,8 @@
   dataset_aux <- rbind(dataset_aux, list(dataset_teste$dia_mes_ano[1], hora_inicial, 
                                          Vd1, Pd, Nloss, Vd2, m, x_gauss, SR), deparse.level = 1)
 
+  
+  dataset_aux <- unique(dataset_aux)
+  
 #}
 
