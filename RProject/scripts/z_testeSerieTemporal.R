@@ -1,10 +1,10 @@
 
 
-
+  
   dataset_teste <- datasetDiv
   dataset_teste <- na.omit(dataset_teste)#aux_dia[i] <- datasetDiv$dia_mes_ano[1]
   
-  aux_dia[temp_i] <- datasetDiv$dia_mes_ano[1]
+  aux_dia[dia_atual] <- datasetDiv$dia_mes_ano[1]
   
   # Temperatura media em °C
   Temp_Media <- mean(dataset_teste$temp, na.rm=TRUE)
@@ -90,12 +90,12 @@
   ### Modelo 01 - On temporal modelling (...) in seven cities
   # Vd = velocidade de deposicao 
   Vd1 = 1/(Ra+Rb) + Vs_velSed*cosd(theta)
-  Pd = round( Vd1 * ListaConcentracaoMedia[length(ListaConcentracaoMedia)] * 10^(-6) * i , 8) #MediaConcentracao
+  Pd = round( Vd1 * ListaConcentracaoMedia[length(ListaConcentracaoMedia)] * 10^(-6) * (dia_quebra+1), 8) #MediaConcentracao
   Nloss = 0.015 * Pd
   
   ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
   # t unidade de tempo em segundos
-  t_sec = 86400*i
+  t_sec = 86400 * hora_quebra
   Vd2 =  1/(Ra+Rb) + Vs_velSed 
   VdAux <- c(VdAux, Vd2)
   
@@ -109,6 +109,6 @@
 
   
   dataset_aux <- unique(dataset_aux)
-  
+  hora_quebra <- hora_quebra + 1
 #}
 
