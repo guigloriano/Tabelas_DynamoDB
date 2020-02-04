@@ -263,16 +263,18 @@ write_csv(zy_merge, salvarArq_name)
 zy_merge <- na.omit(zy_merge)
 #zy_merge[is.na(zy_merge)] <- 0
 
-#modelo <- zy_merge$P_AC ~ zy_merge$irr_est + zy_merge$irr_inv + zy_merge$temp + zy_merge$numPM1 + zy_merge$massaPM1 + 
-#  zy_merge$numPM2 + zy_merge$massaPM2 + zy_merge$vento_vel + zy_merge$vento_dir + zy_merge$DVr1 + zy_merge$DVr2 + 
-#  zy_merge$IDV1 + zy_merge$IDV2 + zy_merge$Vd1 + zy_merge$Pd + zy_merge$Nloss + zy_merge$Vd2 + zy_merge$m + 
-#  zy_merge$x_gauss + zy_merge$SR
+modelo <- zy_merge$P_AC ~ zy_merge$irr_est + zy_merge$irr_inv + zy_merge$temp + zy_merge$numPM1 + zy_merge$massaPM1 + 
+  zy_merge$numPM2 + zy_merge$massaPM2 + zy_merge$vento_vel + zy_merge$vento_dir + zy_merge$DVr1 + zy_merge$DVr2 + 
+  zy_merge$IDV1 + zy_merge$IDV2 + zy_merge$Vd1 + zy_merge$Pd + zy_merge$Nloss + zy_merge$Vd2 + zy_merge$m + 
+  zy_merge$x_gauss + zy_merge$SR
 
-modelo <- zy_merge$P_AC ~ zy_merge$irr_inv + zy_merge$temp + zy_merge$numPM1 + zy_merge$massaPM1 + 
-  zy_merge$vento_vel + zy_merge$Vd1 + zy_merge$Pd + zy_merge$m + zy_merge$x_gauss + zy_merge$SR
+#modelo <- zy_merge$P_AC ~ zy_merge$irr_inv + zy_merge$temp + zy_merge$numPM1 + zy_merge$massaPM1 + 
+#  zy_merge$vento_vel + zy_merge$Vd1 + zy_merge$Pd + zy_merge$m + zy_merge$x_gauss + zy_merge$SR
 
 
 reg_linear <- lm(modelo, data = zy_merge, na.action=na.omit )  
+
+
 summary(reg_linear) 
 
 dfy_cor <- data.frame(zy_merge)

@@ -1,5 +1,12 @@
+merge_caminho <- "D:/github/Tabelas_DynamoDB/csv/teste_lm/merge/"
 
-#View(filesMerge)
+pathMerge <- setwd(merge_caminho)
+pathMerge <- setwd(merge_caminho)
+namesMerge <- list.files(pattern = "*.csv")
+filesMerge <- paste(pathMerge,  "/", namesMerge, sep = "")
+
+group_caminho <- "D:/github/Tabelas_DynamoDB/csv/teste_lm/group/"  
+
 
 fi = 0 
 
@@ -59,7 +66,7 @@ for(i in 1:length(filesMerge)){
   if ( y$hora_minuto[1] == "000100")
     y$hora_minuto[1] <- "000000"
   
-  salvarArq_name <- paste(pathGroup, "tabela_por_hora", mergeDataset$dia_mes_ano[1], ".csv", sep = "")
+  salvarArq_name <- paste(pathGroup, "tabela_por_hora_", mergeDataset$dia_mes_ano[1], ".csv", sep = "")
   write_csv(y, salvarArq_name)
   
 }
