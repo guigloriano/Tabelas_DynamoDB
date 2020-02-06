@@ -42,7 +42,7 @@ newDataset <- data.frame(NULL)
 
 dia_atual = 1
 dia_inicio = 1
-dia_final = 84
+dia_final = 10 #98
 # summary(reg_linear)
 # dia_final = length(filesDiv)
 

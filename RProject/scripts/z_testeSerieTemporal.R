@@ -99,7 +99,7 @@
   Vd2 =  1/(Ra+Rb) + Vs_velSed 
   VdAux <- c(VdAux, Vd2)
   
-  m = Vd2 * ListaMassaMedia[length(ListaMassaMedia)] * 10^(-6) * cosd(theta) * t_sec # MediaMassa
+  m = Vd2 * ListaMassaMedia[length(ListaMassaMedia)] * 10^(-6) * cosd(theta) * t_sec # -,,,
   x_gauss = 0.17*m^(0.8473)
   SR = 1 - 34.37*erf(x_gauss)
   
