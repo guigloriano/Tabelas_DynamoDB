@@ -1,0 +1,27 @@
+# List files
+library(dplyr)
+library(magrittr)
+library(readr)
+library("stringr")
+library(plyr)  
+
+
+cam_horas <- setwd("D:\\github\\Tabelas_DynamoDB\\csv_dados\\inv_original\\")
+arq_horas <- list.files(pattern = "*.csv")
+
+for(i in 20:33){ 
+  assign(arq_horas[i],read.csv(arq_horas[i],skip=1, header=TRUE))
+  
+  dataset_atual <- readr::read_csv(arq_horas[i], col_types = cols(hora_minuto = col_character()))
+  
+  dataset_atual$hora_minuto <- str_pad(dataset_atual$hora_minuto, width=6, side="left", pad="0")
+
+  t <- strptime(paste(dataset_atual$hora_minuto), "%H%M%S")
+  t <- t - lubridate::as.period(1, unit = "hours")
+  dataset_atual$hora_minuto <- as.numeric(strftime(t, "%H%M%S"))
+
+  salvarArq_path <- "D:\\github\\Tabelas_DynamoDB\\csv_analisados\\inversor_ok\\"
+  salvarArq_name <- paste(salvarArq_path, arq_horas[i], sep = "")
+  write_csv(dataset_atual, salvarArq_name)
+
+}
