@@ -4,9 +4,11 @@ library(stringr)
 library(pracma)
 library(compareDF)
 
-inv_caminho <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\inversor_ok\\"
-est_caminho <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\ambientais\\"
-comb_caminho <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\tabelas_combinadas\\"
+#dados com dias já separados e temperatura corrigida
+inv_caminho <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\tabelas_teste\\inv\\"   
+est_caminho <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\tabelas_teste\\03a_ambientais\\"
+
+comb_caminho <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\tabelas_teste\\02_combina_tabelas_amb_inv\\"
 
 # bloco para leitura dos arquivos .csvs do inversor
 cam_Inv <- setwd(inv_caminho)
@@ -52,6 +54,7 @@ for(i in 1:length(arq_Inv)){
   dia <- z_merge$dia_mes_ano[1]
   
   z_merge[is.na(z_merge)] <- 0
+  z_merge$X1 <- NULL
   
   fileDest <- paste(cam_Merge,  "/merge_", dia, ".csv", sep = "")
   write_csv(z_merge, fileDest)
