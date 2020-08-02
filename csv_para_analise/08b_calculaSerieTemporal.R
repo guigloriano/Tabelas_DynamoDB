@@ -108,7 +108,9 @@ Nloss = 0.015 * Pd
 
 ### Modelo 02 - Simple Model for Predicting (...) of PV Panels
 # t unidade de tempo em segundos
-t_sec = 86400 * hora_quebra
+#t_sec = 86400 * hora_quebra
+
+t_sec = 600 * hora_quebra
 Vd2 =  1/(Ra+Rb) + Vs_velSed 
 VdAux <- c(VdAux, Vd2)
 

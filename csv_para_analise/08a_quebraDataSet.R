@@ -1,3 +1,14 @@
+#######################################################################################
+##
+##    Variavel hora_quebra esta incrementando mais do que deveria.
+##    esta operação deveria aumentar a quantidade de segundos por hora (3600)
+##    mas está incrementando a quantidade diária (84600)
+##    outro problema é que o conjunto de teste é feito a cada 10 minutos, ou seja
+##    a variavel deveria incrementar 10 min * 60 seg = 600 
+##
+##
+########################################################################################
+
 library(dplyr)
 library(readr)
 library(stringr)
@@ -6,7 +17,7 @@ library(compareDF)
 
 pasta_estacao <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\tabelas_teste\\05_interpola_est\\"
 
-# bloco para leitura dos arquivos .csvs do inversor
+# bloco para leitura dos arquivos .csvs da estacao
 caminho_estacao <- setwd(pasta_estacao)
 caminho_estacao <- setwd(pasta_estacao)
 nomes_arq_estacao <- list.files(pattern = "*.csv")
@@ -27,16 +38,18 @@ ListaMassaMedia <- NULL
 ListaConcentracao <- NULL
 ListaConcentracaoMedia <- NULL
 
-aux_dia <- NULL
-
-hora_inicial <- NULL
-z_merge_total <- NULL
 
 UAux <- NULL
 RaAux <- NULL
 RbAux <- NULL
 VsAux <- NULL
 VdAux <- NULL
+
+
+aux_dia <- NULL
+hora_inicial <- NULL
+z_merge_total <- NULL
+
 
 dia_atual = 1
 dia_inicio = 1
@@ -51,7 +64,9 @@ hora_quebra <- 1
 
 #for (dia_atual in dia_inicio:dia_final){
 for (dia_atual in dia_inicio:length(arquivos_estacao)){
-  cont_dias <- (dia_atual - 1)*24
+#  cont_dias <- (dia_atual - 1)*24
+  
+  cont_dias <- dia_atual
   
   dataset_temp <- readr::read_csv(nomes_arq_estacao[dia_atual], col_types = cols(hora_minuto = col_character()))
   dataset_temp$X1 <- NULL
@@ -69,22 +84,32 @@ for (dia_atual in dia_inicio:length(arquivos_estacao)){
       temp10_minutos <- bind_rows(temp10_minutos, dataset_temp[linha,])
     }else{
       source("D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\08b_calculaSerieTemporal.R")
+      
+
       temp10_minutos <- NULL
       temp10_minutos <- bind_rows(temp10_minutos, dataset_temp[linha,])
     }
     if (linha == amostras){
       source("D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\08b_calculaSerieTemporal.R")
     }
-  }
+    
   
+    
+
+    
+  }
   dataset_save <- rbind(dataset_save, dataset_aux)
   dataset_save <- na.omit(dataset_save)
   
   arq_final_diario <- filter(dataset_save, dataset_save$dia_mes_ano == dia)
 
   caminho_salvar <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\tabelas_teste\\08_quebraDataset\\"
+#  caminho_salvar <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\zz_novos_testes\\"
   fileDest <- paste(caminho_salvar,  "/teste_M_", dia, ".csv", sep = "")
   write.csv(arq_final_diario, fileDest)  
+  
+  
+
 }
 
 

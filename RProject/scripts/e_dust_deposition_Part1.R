@@ -30,8 +30,12 @@ for(i in IN:OUT){
   # Temperatura media em °C
   Temp_Media = round(mean(dustDep_temp$temp), digits = 5)
   
+  
   # etapa que calcula o indice de direção do vento 
   source("D:/github/Tabelas_DynamoDB/RProject/scripts/e_dust_deposition_Part1b.R")
+  
+  
+  
   
   # calcula a vel. do vento media atual e monta uma lista delas
   Vel_Med_Vento = round(mean(dustDep_temp$vento_vel), digits = 5)
@@ -57,12 +61,21 @@ for(i in IN:OUT){
   ConcentracaoMediaParticulados <- mean(ListaConcentracao)
   ListaConcentracaoMedia <- c(ListaConcentracaoMedia, ConcentracaoMediaParticulados)
   
+  
+  
+  
+  
+  
   # chamando trecho de codigo que possui o equacionamento
   source("D:/github/Tabelas_DynamoDB/RProject/scripts/e_dust_deposition_Part2.R")
   
   # criacao do dataset para calculo do impacto da sujidade
   dataset_DustDep <- rbind(dataset_DustDep, list(dustDep_temp$dia_mes_ano[1], Vd1, Pd, Nloss, 
                                                  Vd2, m, x_gauss, SR), deparse.level = 1)
+  
+  
+  
+  
   
 }
 
