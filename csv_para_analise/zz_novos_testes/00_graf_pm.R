@@ -50,8 +50,8 @@ library(reshape2)
 ######## VARIAVEIS DE CONTROLE #############
 
 OP_DIARIO   <- 0
-OP_M_ACC    <- 1
-OP_GERAL    <- 0
+OP_M_ACC    <- 0
+OP_GERAL    <- 3
 OP_CHUVA    <- 0
 OP_CHUVA_T  <- 2    # pode deixar setado
 OP_M_CHUVA  <- 1
@@ -535,6 +535,7 @@ if ( OP_GERAL == 1 ){
   
   grid <- grid.arrange(gf_PM1, gf_PM2, gf_PM4, gf_PM10, ncol=2, nrow=2, top="Massa Di嫫ia dos Particulados")
   
+  break 
   pathDest <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\zz_novos_testes\\gf_massa\\"
   fileDest <- paste(pathDest,  "aA_TodosDias.png", sep = "")
 #  png(filename = fileDest, width = 1280, height = 720, units = 'px')
@@ -594,6 +595,9 @@ if ( OP_GERAL == 2 ){
 
 # Gr塻ico de todos os dias dos 4 Particulados para Massa e Concentra誽o
 if ( OP_GERAL == 3 ){
+  
+  pathDestc <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\zz_novos_testes\\gf_massaConcent\\bbbb\\"
+  
   gf_PM1 <- ggplot(data = todosDiasSummarise, aes(newDate)) +
     geom_point( aes(y=mPM1acc*1, group = 1), colour = 'blue', size = 1) +
     geom_line ( aes(y=mPM1acc*1, group = 1), colour = 'blue') +
@@ -608,7 +612,15 @@ if ( OP_GERAL == 3 ){
       axis.title.y = element_text(hjust = 0.5, color = 'blue', size=13),
       axis.title.y.right = element_text(hjust = 0.5, color = 'red', size=13)
     ) + ggtitle("Massa [u/cm設 e Concentra誽o [#/cm設 - PM1.0") +
-    theme(axis.text.x = element_text(angle = 60))
+    theme(axis.text.x = element_text(angle = 60)) +
+    theme(text = element_text(size=20), axis.text.x = element_text(angle = 45))
+  
+  
+  fileDestc <- paste(pathDestc,  "ConcTodosDias_PM1.png", sep = "")
+  png(filename = fileDestc, width = 1100, height = 600, units = 'px')  
+  plot(gf_PM1)
+  dev.off()
+
   
   
   gf_PM2 <- ggplot(data = todosDiasSummarise, aes(newDate)) +
@@ -625,8 +637,14 @@ if ( OP_GERAL == 3 ){
       axis.title.y = element_text(hjust = 0.5, color = 'blue', size=13),
       axis.title.y.right = element_text(hjust = 0.5, color = 'red', size=13)
     ) + ggtitle("Massa [u/cm設 e Concentra誽o [#/cm設 - PM2.5") +
-    theme(axis.text.x = element_text(angle = 60))
+    theme(axis.text.x = element_text(angle = 60)) +
+    theme(text = element_text(size=20), axis.text.x = element_text(angle = 45))
   
+  
+  fileDestc <- paste(pathDestc, "ConcTodosDias_PM2.png", sep = "")
+  png(filename = fileDestc, width = 1100, height = 600, units = 'px')  
+  plot(gf_PM2)
+  dev.off()
   
   gf_PM4 <- ggplot(data = todosDiasSummarise, aes(newDate)) +
     geom_point( aes(y=mPM4acc*1, group = 1), colour = 'blue', size = 1) +
@@ -642,7 +660,13 @@ if ( OP_GERAL == 3 ){
       axis.title.y = element_text(hjust = 0.5, color = 'blue', size=13),
       axis.title.y.right = element_text(hjust = 0.5, color = 'red', size=13)
     ) + ggtitle("Massa [ug/cm設 e Concentra誽o [#/cm設 - PM4.0") +
-    theme(axis.text.x = element_text(angle = 60))
+    theme(axis.text.x = element_text(angle = 60)) +
+    theme(text = element_text(size=20), axis.text.x = element_text(angle = 45))
+  
+  fileDestc <- paste(pathDestc,  "ConcTodosDias_PM4.png", sep = "")
+  png(filename = fileDestc, width = 1100, height = 600, units = 'px')  
+  plot(gf_PM4)
+  dev.off()
   
   
   gf_PM10 <- ggplot(data = todosDiasSummarise, aes(newDate)) +
@@ -659,14 +683,19 @@ if ( OP_GERAL == 3 ){
       axis.title.y = element_text(hjust = 0.5, color = 'blue', size=13),
       axis.title.y.right = element_text(hjust = 0.5, color = 'red', size=13)
     ) + ggtitle("Massa [ug/cm設 e Concentra誽o [#/cm設 - PM10.0") +
-    theme(axis.text.x = element_text(angle = 60))
+    theme(axis.text.x = element_text(angle = 60)) +
+    theme(text = element_text(size=20), axis.text.x = element_text(angle = 45))
+  
+  fileDestc <- paste(pathDestc,  "ConcTodosDias_PM10.png", sep = "")
+  png(filename = fileDestc, width = 1100, height = 600, units = 'px')  
+  plot(gf_PM10)
+  dev.off()
   
   
   grid <- grid.arrange(gf_PM1, gf_PM2, gf_PM4, gf_PM10, 
                        ncol=2, nrow=2, top="Concentra誽o Di嫫ia dos Particulados")
   
   
-  pathDestc <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\zz_novos_testes\\gf_massaConcent\\"
   fileDestc <- paste(pathDestc,  "aA_TodosDias.png", sep = "")
   png(filename = fileDestc, width = 1550, height = 720, units = 'px')
   plot(grid)

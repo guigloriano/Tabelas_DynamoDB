@@ -4,6 +4,8 @@ library(ggplot2)
 library(tidyr)
 library(dplyr)
 require(tidyverse)
+library(chron)
+library(scales)
 
 caminhoDados <- "D:\\github\\Tabelas_DynamoDB\\csv_para_analise\\ambientais\\"
 
@@ -95,13 +97,17 @@ for(dias in 1:length(listaDadosAmbientais)){
     scale_x_date(name = "Semanas", labels = date_format("%d %b"), breaks = date_breaks("week")) +
     scale_y_continuous(
       name = "PM1 [#/cm設",
-      sec.axis = sec_axis(~./100, name = "PM2 [#/cm設")
+      sec.axis = sec_axis(~./100, name = "PM2 [#/cm設"),
+      breaks=c(0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60)
     ) + theme_ipsum() + 
     theme(
-      axis.title.y = element_text(color = 'darkgreen', size=13, h=.5),
-      axis.title.y.right = element_text(color = 'purple', size=13, h=.5)
+      axis.title.y = element_text(color = 'darkgreen', size=20, h=.5),
+      axis.title.y.right = element_text(color = 'purple', size=20, h=.5),
+      axis.title.x = element_text(color = "black", size=20,  h=.5)
     ) + ggtitle("M嶮ia da Concentra誽o de Particulado [#/cm設") +
-    theme(axis.text.x = element_text(angle = 60))
+     theme(text = element_text(size=1),
+          axis.text.x = element_text(size=20, angle=45), 
+          axis.text.y = element_text(size=20))
  
 #   grid_dia <- grid.arrange(gf_teste1, gf_teste2, 
   grid_dia <- grid.arrange(gf_teste2, 
